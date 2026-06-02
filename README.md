@@ -2,21 +2,17 @@
 
 > Upload any structured dataset. DataPulse cleans it, profiles it, and surfaces insights - automatically.
 
-DataPulse is an interactive data analytics web application that demonstrates end-to-end data engineering capability. It takes raw, messy, real-world data and walks it through a complete analytics pipeline: automated cleaning, intelligent profiling, exploratory analysis, statistical modeling, and domain-specific business insights - all without writing a single line of code.
-
-Built to prove one thing: **I can take your data from dirty to decision-ready.**
+DataPulse is an interactive data analytics web application built with Python and Streamlit. It walks any structured dataset through a complete pipeline: automated cleaning, intelligent profiling, exploratory analysis, statistical modeling, and domain-specific business insights.
 
 ---
+
+**Live Demo:** [dpulse.streamlit.app](https://dpulse.streamlit.app)
 
 ![Python](https://img.shields.io/badge/Python-3.11+-111827?style=flat-square&logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-111827?style=flat-square&logo=streamlit&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Plotly-5.20+-111827?style=flat-square&logo=plotly&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-2.0+-111827?style=flat-square&logo=pandas&logoColor=white)
 ![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.4+-111827?style=flat-square&logo=scikit-learn&logoColor=white)
-
----
-
-**Live Demo:** [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dpulse.streamlit.app)
 
 ---
 
