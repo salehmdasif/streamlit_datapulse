@@ -23,7 +23,7 @@ DataPulse is an interactive data analytics web application built with Python and
 - [Problem Statement](#problem-statement)
 - [Solution Overview](#solution-overview)
 - [Architecture Overview](#architecture-overview)
-- [The 5-Step Pipeline](#the-5-step-pipeline)
+- [The 6-Step Pipeline](#the-6-step-pipeline)
 - [Features](#features)
 - [Technology Stack](#technology-stack)
 - [Domain Intelligence](#domain-intelligence)
@@ -53,13 +53,14 @@ Most people either:
 
 ## Solution Overview
 
-DataPulse is a five-step analytics pipeline wrapped in a clean web interface:
+DataPulse is a six-step analytics pipeline wrapped in a clean web interface:
 
 1. **Load** - upload any CSV or Excel file (or try one of 4 sample datasets)
 2. **Clean** - auto-detect and fix data quality issues with full transparency
 3. **Profile** - classify columns, detect business domain, score data quality
 4. **Analyze** - run correlation, group comparison, trend analysis, regression, and hypothesis testing
 5. **Insights** - get domain-specific intelligence tailored to Marketing, Sales, Finance, or HR data
+6. **Analytics Charts** - build and download colorful Pie, Bar, Line, Bubble, Funnel, Waterfall, Treemap, Stacked Bar, and Gauge charts
 
 The entire pipeline runs in the browser. No setup. No code. No waiting.
 
@@ -77,9 +78,11 @@ flowchart TD
     D --> E[eda.py\nEDA Charts - Plotly]
     D --> F[analyzer.py\nStatistical Analysis Engine]
     D --> G[domain_insights.py\nDomain Intelligence]
+    D --> K[charts.py\nAnalytics Charts Engine]
     E --> H[Streamlit UI - Step 3]
     F --> I[Streamlit UI - Step 4]
     G --> J[Streamlit UI - Step 5]
+    K --> L[Streamlit UI - Step 6]
 
     style A fill:#374151,color:#f9fafb,stroke:#374151
     style B fill:#111827,color:#ffffff,stroke:#111827
@@ -91,6 +94,8 @@ flowchart TD
     style H fill:#1f2937,color:#d1d5db,stroke:#1f2937
     style I fill:#1f2937,color:#d1d5db,stroke:#1f2937
     style J fill:#1f2937,color:#d1d5db,stroke:#1f2937
+    style K fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style L fill:#1f2937,color:#d1d5db,stroke:#1f2937
 ```
 
 > 💡 View this diagram: open `docs/diagrams/architecture.mmd` in [Mermaid Live Editor](https://mermaid.live)
@@ -105,10 +110,11 @@ flowchart TD
 | `eda.py`             | All Plotly chart functions (heatmap, distributions, bar charts, scatter, trend)                |
 | `analyzer.py`        | Pearson correlation, group aggregation, time-series, linear regression, OLS hypothesis testing |
 | `domain_insights.py` | Domain-specific KPI logic for Marketing, Sales, Finance, and HR datasets                       |
+| `charts.py`          | Analytics Charts engine — 9 chart types with colorful palette and PNG export via kaleido       |
 
 ---
 
-## The 5-Step Pipeline
+## The 6-Step Pipeline
 
 ```mermaid
 sequenceDiagram
@@ -132,6 +138,8 @@ sequenceDiagram
     Analyzer->>UI: Correlation results, Regression coefficients,\nHypothesis test p-values
     UI->>Domain: Cleaned DataFrame + Detected Domain
     Domain->>UI: KPIs, Winning Ads / Top Products /\nBudget Variance / Attrition Analysis
+    UI->>Charts: Cleaned DataFrame + User chart selections
+    Charts->>UI: Pie, Bar, Line, Bubble, Funnel,\nWaterfall, Treemap, Stacked Bar, Gauge
     UI->>User: Full interactive dashboard
 ```
 
@@ -260,11 +268,35 @@ sequenceDiagram
 
 ---
 
-### Step 6 - Domain Intelligence
+### Step 5 - Domain Intelligence
 
 **Purpose:** Go beyond generic analysis to domain-specific business insights that directly answer relevant questions.
 
 See [Domain Intelligence](#domain-intelligence) section below.
+
+---
+
+### Step 6 - Analytics Charts
+
+**Purpose:** Build and export publication-ready charts from the cleaned dataset with full user control over columns, aggregation, and style.
+
+**9 Chart Types:**
+
+| Chart | Best For |
+|---|---|
+| **Pie / Donut** | Category share breakdown |
+| **Bar** | Category vs metric comparison, top N |
+| **Line** | Trend over time, multi-metric overlay |
+| **Bubble** | 3-variable relationship (X, Y, size) |
+| **Funnel** | Conversion pipeline, stage drop-off |
+| **Waterfall** | Contribution breakdown, budget bridge |
+| **Treemap** | Hierarchical category breakdown |
+| **Stacked Bar** | Sub-group composition, regular or 100% normalized |
+| **Gauge / KPI Meter** | Single metric vs range, up to 4 simultaneous |
+
+**Per-chart controls:** Column selectors, aggregation (sum/mean/median/count), top N, sort order, drill-down, normalized mode, multi-metric selection.
+
+**PNG Export:** Every chart has a `↓ Download PNG` button — exports at 2× resolution (1100px wide) via kaleido.
 
 ---
 
@@ -364,7 +396,7 @@ Activated when columns like `employee`, `salary`, `attrition`, `department` are 
 ## Project Structure
 
 ```
-streamlit_datapulse/
+streamlit-datapulse/
 │
 ├── main.py                      ← App entry point - full UI + session state
 ├── requirements.txt             ← Python dependencies
@@ -375,25 +407,25 @@ streamlit_datapulse/
 │   ├── __init__.py
 │   ├── cleaner.py               ← Auto Data Cleaning Engine
 │   ├── profiler.py              ← Data Profiler + Domain Detection
-│   ├── eda.py                   ← All Plotly chart functions
+│   ├── eda.py                   ← EDA Plotly chart functions
 │   ├── analyzer.py              ← Statistical Analysis (correlation, regression, OLS)
-│   └── domain_insights.py       ← Domain Intelligence (Marketing, Sales, Finance, HR)
+│   ├── domain_insights.py       ← Domain Intelligence (Marketing, Sales, Finance, HR)
+│   └── charts.py                ← Analytics Charts Engine (9 chart types + PNG export)
 │
 ├── data/
 │   └── samples/
-│       ├── sample_meta_ads.csv  ← Marketing data with intentional issues
-│       ├── sample_sales.csv     ← E-commerce order data
-│       ├── sample_finance.csv   ← Monthly budget/actual report
-│       └── sample_hr.csv        ← Employee records with mixed encoding
+│       ├── sample_meta_ads.csv  ← Marketing / Meta Ads data (90 rows)
+│       ├── sample_sales.csv     ← E-commerce order data (85 rows)
+│       ├── sample_finance.csv   ← Monthly budget/actual report (80 rows)
+│       └── sample_hr.csv        ← Employee records (90 rows)
 │
 ├── docs/
 │   ├── diagrams/
 │   │   ├── architecture.mmd     ← System architecture (Mermaid source)
 │   │   ├── feature-flow.mmd     ← User journey sequence diagram
 │   │   └── tech-stack.mmd       ← Technology stack diagram
-│   └── screenshots/             ← Add screenshots here for portfolio
+│   └── screenshots/             ← Screenshots for portfolio
 │
-├── PLAN.md                      ← Original 5-phase build plan
 ├── CASE_STUDY.md                ← Client-facing project story
 ├── ARCHITECTURE.md              ← Technical architecture deep-dive
 └── .gitignore
@@ -446,31 +478,32 @@ streamlit_datapulse/
 
 ## Project Metrics
 
-| Metric                      | Value                                                               |
-| --------------------------- | ------------------------------------------------------------------- |
-| Total Python modules        | 6                                                                   |
-| Lines of code (approx)      | ~2,000                                                              |
-| Analysis methods            | 5 (correlation, group, trend, regression, hypothesis testing)       |
-| Domain intelligence classes | 4 (Marketing, Sales, Finance, HR)                                   |
-| Data quality checks         | 6 types                                                             |
-| Bundled sample datasets     | 4 (with intentional dirty data)                                     |
-| Supported file formats      | CSV, XLS, XLSX, URL                                                 |
-| Plotly chart types          | 7 (heatmap, histogram, box, bar, scatter, line, feature importance) |
-| Build phases completed      | 5 / 5                                                               |
-| Estimated complexity        | High                                                                |
+| Metric                      | Value                                                                        |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| Total Python modules        | 7                                                                            |
+| Lines of code (approx)      | ~2,800                                                                       |
+| Analysis methods            | 5 (correlation, group, trend, regression, hypothesis testing)                |
+| Domain intelligence classes | 4 (Marketing, Sales, Finance, HR)                                            |
+| Data quality checks         | 6 types                                                                      |
+| Bundled sample datasets     | 4 (80–90 rows each)                                                          |
+| Supported file formats      | CSV, XLS, XLSX, URL                                                          |
+| Plotly chart types          | 16 (heatmap, histogram, box, bar, scatter, line, feature importance, pie, bubble, funnel, waterfall, treemap, stacked bar, gauge + variants) |
+| PNG chart export            | Yes — all 9 Analytics Charts, 2× resolution via kaleido                      |
+| Build phases completed      | 6 / 6                                                                        |
+| Estimated complexity        | High                                                                         |
 
 ---
 
 ## Sample Datasets
 
-All 4 sample datasets are bundled and ready to use - no external data needed. Each has intentional data quality issues to demonstrate the cleaning engine.
+All 4 sample datasets are bundled and ready to use - no external data needed.
 
-| Dataset               | Domain          | Rows | Intentional Issues                                                        |
-| --------------------- | --------------- | ---- | ------------------------------------------------------------------------- |
-| `sample_meta_ads.csv` | Marketing / Ads | 30   | Currency strings (`$250.50`), missing ROAS/CPC, one outlier spend value   |
-| `sample_sales.csv`    | Sales           | 30   | Missing revenue, `N/A` unit prices, missing customer names                |
-| `sample_finance.csv`  | Finance         | 30   | Missing actuals, `N/A` expenses, outlier profit, column names with spaces |
-| `sample_hr.csv`       | HR / People     | 35   | Mixed attrition encoding (Yes/No/1/0), missing salary, duplicate row      |
+| Dataset               | Domain          | Rows |
+| --------------------- | --------------- | ---- |
+| `sample_meta_ads.csv` | Marketing / Ads | 90   |
+| `sample_sales.csv`    | Sales           | 85   |
+| `sample_finance.csv`  | Finance         | 80   |
+| `sample_hr.csv`       | HR / People     | 90   |
 
 ---
 
@@ -484,8 +517,8 @@ All 4 sample datasets are bundled and ready to use - no external data needed. Ea
 ### Install
 
 ```bash
-git clone https://github.com/salehmdasif/streamlit_datapulse.git
-cd streamlit_datapulse
+git clone https://github.com/salehmdasif/streamlit-datapulse.git
+cd streamlit-datapulse
 pip install -r requirements.txt
 ```
 
