@@ -165,26 +165,53 @@ def plot_bubble(
     size_col: str,
     color_col: str | None = None,
 ) -> go.Figure:
-    cols  = [x_col, y_col, size_col]
-    if color_col and color_col in df.columns:
-        cols.append(color_col)
-    clean = df[cols].dropna().copy()
-    for _nc in [x_col, y_col, size_col]:
-        clean[_nc] = pd.to_numeric(clean[_nc], errors="coerce")
-    clean = clean.dropna(subset=[x_col, y_col, size_col])
+    # Use internal names to avoid duplicate-column crashes when user picks
+    # the same column for X / Y / Size
+    def _to_num(series):
+        # strip common currency / percent symbols before parsing
+        s = series.astype(str).str.replace(r"[$€£¥%,\s]", "", regex=True)
+        return pd.to_numeric(s, errors="coerce")
 
-    raw   = clean[size_col].abs()
-    s_min, s_max = raw.min(), raw.max()
-    bubble = (8 + (raw - s_min) / (s_max - s_min) * 34) if s_max > s_min else pd.Series([20] * len(clean), index=clean.index)
+    x_s = _to_num(df[x_col])
+    y_s = _to_num(df[y_col])
+    z_s = _to_num(df[size_col])
+
+    clean = pd.DataFrame({"_x": x_s, "_y": y_s, "_z": z_s}).dropna()
+
+    if color_col and color_col in df.columns:
+        clean["_c"] = df[color_col].reindex(clean.index).values
+        clean = clean.dropna(subset=["_c"])
+        has_color = True
+    else:
+        has_color = False
+
+    # return a blank figure if no valid rows remain
+    if len(clean) == 0:
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No valid numeric data for the selected columns.",
+            xref="paper", yref="paper", x=0.5, y=0.5,
+            showarrow=False, font=dict(size=12, color=_GRAY),
+        )
+        fig.update_layout(**_base(height=300))
+        return fig
+
+    raw   = clean["_z"].abs()
+    s_min, s_max = float(raw.min()), float(raw.max())
+    bubble = (
+        (8 + (raw - s_min) / (s_max - s_min) * 34).astype(float)
+        if s_max > s_min
+        else pd.Series([20.0] * len(clean), index=clean.index, dtype=float)
+    )
 
     fig = go.Figure()
 
-    if color_col and color_col in clean.columns:
-        for i, cat in enumerate(clean[color_col].unique()):
-            m = clean[color_col] == cat
+    if has_color:
+        for i, cat in enumerate(clean["_c"].unique()):
+            m = clean["_c"] == cat
             fig.add_trace(go.Scatter(
-                x=clean.loc[m, x_col],
-                y=clean.loc[m, y_col],
+                x=clean.loc[m, "_x"],
+                y=clean.loc[m, "_y"],
                 mode="markers",
                 name=str(cat)[:22],
                 marker=dict(
@@ -193,7 +220,7 @@ def plot_bubble(
                     opacity=0.78,
                     line=dict(color="white", width=1),
                 ),
-                customdata=clean.loc[m, size_col],
+                customdata=clean.loc[m, "_z"],
                 hovertemplate=(
                     f"<b>{cat}</b><br>{x_col}: %{{x:,.2f}}<br>"
                     f"{y_col}: %{{y:,.2f}}<br>{size_col}: %{{customdata:,.2f}}<extra></extra>"
@@ -202,12 +229,12 @@ def plot_bubble(
         show_legend = True
     else:
         fig.add_trace(go.Scatter(
-            x=clean[x_col],
-            y=clean[y_col],
+            x=clean["_x"],
+            y=clean["_y"],
             mode="markers",
             marker=dict(
                 size=bubble,
-                color=clean[size_col],
+                color=clean["_z"],
                 colorscale=[[0, "#6366f1"], [0.5, "#10b981"], [1, "#f43f5e"]],
                 opacity=0.78,
                 line=dict(color="white", width=1),
@@ -219,7 +246,7 @@ def plot_bubble(
                     outlinewidth=0,
                 ),
             ),
-            customdata=clean[size_col],
+            customdata=clean["_z"],
             hovertemplate=(
                 f"{x_col}: %{{x:,.2f}}<br>{y_col}: %{{y:,.2f}}<br>"
                 f"{size_col}: %{{customdata:,.2f}}<extra></extra>"
