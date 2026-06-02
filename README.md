@@ -17,7 +17,7 @@ Built to prove one thing: **I can take your data from dirty to decision-ready.**
 
 ---
 
-**Live Demo:** *(Deploy link - see Phase 5 deployment)*
+**Live Demo:** [dpulse.streamlit.app](https://dpulse.streamlit.app)
 **Repository:** [github.com/salehmdasif/streamlit_datapulse](https://github.com/salehmdasif/streamlit_datapulse)
 **Author:** [Abu Salah Mohammad Asif](https://linkedin.com/in/salehmdasif) · Ravelweb Ltd
 

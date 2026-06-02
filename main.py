@@ -102,6 +102,11 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     border-color: #58a6ff !important;
 }
 
+/* ─ Hide sidebar collapse button keyboard hint ───── */
+[data-testid="collapsedControl"] span,
+[data-testid="stSidebarCollapsedControl"] span { display: none !important; }
+button[data-testid="stBaseButton-headerNoPadding"] { display: none !important; }
+
 /* ─ Main Buttons ─────────────────────────────────── */
 .stButton > button {
     background-color: #111827 !important;
@@ -460,11 +465,10 @@ tab_upload, tab_url, tab_sample = st.tabs(["  Upload File  ", "  Paste URL  ", "
 with tab_upload:
     st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
-        "Accepts CSV, XLS, XLSX",
+        "Upload your file",
         type=["csv", "xls", "xlsx"],
         label_visibility="collapsed"
     )
-    st.caption("Accepts CSV, XLS, XLSX — clean or dirty data welcome")
     if uploaded_file is not None:
         try:
             df = load_df(uploaded_file)
@@ -498,10 +502,10 @@ with tab_url:
 with tab_sample:
     st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
     SAMPLES = {
-        "Meta Ads Campaign Data   —   Marketing": "data/samples/sample_meta_ads.csv",
-        "E-commerce Orders   —   Sales":          "data/samples/sample_sales.csv",
-        "Monthly Budget Report   —   Finance":    "data/samples/sample_finance.csv",
-        "Employee Records   —   HR":              "data/samples/sample_hr.csv",
+        "Meta Ads Campaign Data - Marketing": "data/samples/sample_meta_ads.csv",
+        "E-commerce Orders - Sales":          "data/samples/sample_sales.csv",
+        "Monthly Budget Report - Finance":    "data/samples/sample_finance.csv",
+        "Employee Records - HR":              "data/samples/sample_hr.csv",
     }
 
     # Sample cards
@@ -524,15 +528,12 @@ with tab_sample:
         )
 
     st.markdown("<div style='height:0.6rem'></div>", unsafe_allow_html=True)
-    c1, c2 = st.columns([2, 1])
-    with c1:
-        selected_sample = st.selectbox(
-            "Choose dataset", list(SAMPLES.keys()),
-            label_visibility="collapsed"
-        )
-    with c2:
-        st.markdown("<div style='height:0.4rem'></div>", unsafe_allow_html=True)
-        if st.button("Load Sample"):
+    selected_sample = st.selectbox(
+        "Choose dataset", list(SAMPLES.keys()),
+        label_visibility="collapsed"
+    )
+    st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
+    if st.button("Load Sample"):
             try:
                 df = pd.read_csv(SAMPLES[selected_sample])
                 src = selected_sample.split("—")[0].strip()
