@@ -1,31 +1,91 @@
 serial,ad_name,ad_set_name,campaign_name,amount_spent,impressions,clicks,results,max_roas,ctr,cpc,cpr,result_rate_(%),scroll_stop_(%),hook_rate_(%),hold_rate_(%)
-1,Video Ad 01,Retargeting,Summer Sale,$250.50,12000,360,45,3.2,3.0,0.70,5.6,12.5,32.1,35.2,14.2
-2,Carousel Ad 02,Cold Audience,Summer Sale,$180.00,9500,285,30,2.1,3.0,0.63,6.0,10.5,28.4,31.5,11.8
-3,Image Ad 03,Lookalike,Brand Awareness,$95.00,7800,156,18,1.4,2.0,0.61,5.3,11.5,,28.4,9.5
-4,Video Ad 04,Retargeting,Summer Sale,$310.75,15200,456,62,3.8,3.0,0.68,5.0,13.6,35.2,40.1,16.3
-5,Reel Ad 05,Cold Audience,Product Launch,$420.00,22000,660,88,4.5,3.0,0.64,4.8,13.3,38.5,42.2,17.1
-6,Video Ad 01,Retargeting,Summer Sale,$250.50,12000,360,45,3.2,3.0,0.70,5.6,12.5,32.1,35.2,14.2
-7,Image Ad 06,Lookalike,Summer Sale,$75.00,5200,104,9,0.9,2.0,0.72,8.3,8.7,22.1,25.0,7.4
-8,Carousel Ad 07,Retargeting,Brand Awareness,$195.00,10800,324,40,2.6,3.0,0.60,4.9,12.3,30.5,33.8,12.9
-9,Video Ad 08,Cold Audience,Product Launch,,$8200,164,15,,2.0,,,9.1,24.5,27.3,8.6
-10,Reel Ad 09,Retargeting,Summer Sale,$550.00,28000,840,112,5.1,3.0,0.65,4.9,13.3,40.2,44.5,18.4
-11,Image Ad 10,Lookalike,Brand Awareness,$88.00,6100,122,10,1.1,2.0,0.72,8.8,8.2,21.0,23.5,7.0
-12,Video Ad 11,Cold Audience,Summer Sale,$165.00,9200,276,33,2.0,3.0,0.60,5.0,12.0,29.8,32.1,11.2
-13,Carousel Ad 12,Retargeting,Product Launch,$290.00,14500,435,57,3.5,3.0,0.67,5.1,13.1,34.5,38.0,15.5
-14,Reel Ad 13,Lookalike,Summer Sale,$380.00,19500,585,78,4.2,3.0,0.65,4.9,13.3,37.8,41.0,16.8
-15,Video Ad 14,Cold Audience,Brand Awareness,$120.00,7500,150,14,1.3,2.0,0.80,8.6,9.3,23.5,26.0,8.2
-16,Image Ad 15,Retargeting,Summer Sale,$210.00,11200,336,42,2.8,3.0,0.63,5.0,12.5,31.2,34.5,13.1
-17,Video Ad 16,Lookalike,Product Launch,$3200.00,85000,2550,340,6.8,3.0,0.63,9.4,13.3,45.0,50.2,21.0
-18,Reel Ad 17,Cold Audience,Summer Sale,$175.00,9800,294,36,2.3,3.0,0.60,4.9,12.2,30.1,33.5,11.5
-19,Carousel Ad 18,Retargeting,Brand Awareness,$240.00,12500,375,48,3.0,3.0,0.64,5.0,12.8,32.8,36.0,14.0
-20,Video Ad 19,Cold Audience,Summer Sale,N/A,10200,204,20,,2.0,,,9.8,25.5,28.0,8.9
-21,Image Ad 20,Lookalike,Product Launch,$110.00,7000,140,12,1.2,2.0,0.79,9.2,8.6,22.5,24.8,7.8
-22,Video Ad 21,Retargeting,Summer Sale,$330.00,16500,495,66,4.0,3.0,0.67,5.0,13.3,36.0,39.5,16.0
-23,Reel Ad 22,Cold Audience,Brand Awareness,$145.00,8500,170,16,1.5,2.0,0.85,9.1,9.4,24.0,26.5,8.5
-24,Carousel Ad 23,Lookalike,Summer Sale,$270.00,13800,414,52,3.3,3.0,0.65,5.2,12.6,33.5,37.0,14.5
-25,Video Ad 24,Retargeting,Product Launch,$480.00,24500,735,98,5.0,3.0,0.65,4.9,13.3,39.5,43.5,17.8
-26,Image Ad 25,Cold Audience,Summer Sale,$65.00,4800,96,8,0.8,2.0,0.68,8.1,8.3,20.5,22.8,7.0
-27,Video Ad 26,Lookalike,Brand Awareness,$185.00,10100,303,38,2.5,3.0,0.61,4.9,12.5,30.8,34.0,12.6
-28,Reel Ad 27,Retargeting,Summer Sale,$360.00,18200,546,72,4.1,3.0,0.66,5.0,13.2,37.0,40.5,16.5
-29,Carousel Ad 28,Cold Audience,Product Launch,$225.00,12000,360,45,2.9,3.0,0.63,5.0,12.5,31.5,34.8,13.2
-30,Video Ad 29,Lookalike,Summer Sale,$155.00,8800,264,31,2.0,3.0,0.59,5.0,11.7,29.2,32.5,11.0
+1,Collection Ad 01,Retargeting,Summer Sale,$630.47,23946,1267,251,1.2,5.3,0.5,2.51,19.8,53.1,23.4,14.3
+2,Collection Ad 02,Lookalike,Brand Awareness,$745.07,17044,719,158,3.6,4.2,1.04,4.72,22.0,42.7,,20.8
+3,Carousel Ad 03,Cold Audience,Flash Sale,$618.57,25416,1487,344,5.9,5.9,0.42,1.8,23.1,38.3,,22.1
+4,Video Ad 04,Custom Audience,Flash Sale,$608.57,14344,837,113,3.1,5.8,0.73,5.39,13.5,24.5,38.0,21.7
+5,Reel Ad 05,Retargeting,Holiday Special,$377.86,8142,366,48,6.3,4.5,1.03,7.87,13.1,34.4,46.7,10.0
+6,Story Ad 06,Retargeting,Summer Sale,$55.52,29645,1462,282,5.4,4.9,0.04,0.2,19.3,37.9,23.9,21.7
+7,Video Ad 07,Cold Audience,Brand Awareness,$403.32,30362,1464,275,4.4,4.8,0.28,1.47,18.8,30.2,,10.4
+8,Reel Ad 08,Interest Based,Summer Sale,$356.4,21087,1110,132,0.9,5.3,0.32,2.7,11.9,29.7,41.4,21.6
+9,Reel Ad 09,Cold Audience,Flash Sale,$354.79,16374,300,25,1.1,1.8,1.18,14.19,8.3,38.1,39.0,22.4
+10,Collection Ad 10,Custom Audience,Holiday Special,$384.62,29048,843,110,4.9,2.9,0.46,3.5,13.0,19.4,58.4,22.5
+11,Story Ad 11,Cold Audience,Product Launch,$249.4,27455,1343,271,3.6,4.9,0.19,0.92,20.2,19.8,37.1,12.6
+12,Reel Ad 12,Lookalike,Summer Sale,$1765.16,34013,1796,375,5.5,5.3,0.98,4.71,20.9,46.4,45.3,
+13,Carousel Ad 13,Custom Audience,Product Launch,$361.86,28180,977,132,1.5,3.5,0.37,2.74,13.5,44.4,56.9,13.7
+14,Image Ad 14,Lookalike,Brand Awareness,$493.19,4331,48,11,3.9,1.1,10.27,44.84,22.9,19.1,38.6,19.3
+15,Carousel Ad 15,Lookalike,Summer Sale,$405.12,28843,766,129,3.6,2.7,0.53,3.14,16.8,,55.6,18.9
+16,Video Ad 16,Broad Audience,Summer Sale,$131.43,11543,503,64,5.1,4.4,0.26,2.05,12.7,53.4,56.5,5.9
+17,Image Ad 17,Lookalike,Holiday Special,$466.14,20497,1055,229,2.7,5.1,0.44,2.04,21.7,29.5,28.8,9.1
+18,Image Ad 18,Retargeting,Flash Sale,$83.68,14869,472,117,6.7,3.2,0.18,0.72,24.8,59.5,39.8,24.3
+19,Story Ad 19,Interest Based,Summer Sale,$546.25,16127,237,49,2.3,1.5,2.3,11.15,20.7,27.0,52.9,9.5
+20,Story Ad 20,Retargeting,Holiday Special,$499.54,14957,803,91,2.7,5.4,0.62,5.49,11.3,63.6,24.0,
+21,Image Ad 21,Custom Audience,Holiday Special,$222.24,11937,523,52,4.0,4.4,0.42,4.27,9.9,44.1,51.8,23.5
+22,Image Ad 22,Interest Based,Brand Awareness,$148.29,7218,116,27,3.3,1.6,1.28,5.49,23.3,39.4,58.1,28.1
+23,Collection Ad 23,Retargeting,Summer Sale,$68.64,22101,921,90,1.5,4.2,0.07,0.76,9.8,63.3,57.2,16.7
+24,Collection Ad 24,Cold Audience,Retargeting Q3,$638.57,20766,226,22,6.3,1.1,2.83,29.03,9.7,26.6,43.5,20.1
+25,Video Ad 25,Cold Audience,Summer Sale,$359.43,6804,212,40,6.6,3.1,1.7,8.99,18.9,27.4,49.3,7.6
+26,Story Ad 26,Lookalike,Product Launch,$99.92,14973,594,62,6.3,4.0,0.17,1.61,10.4,22.2,25.0,8.8
+27,Collection Ad 27,Lookalike,Brand Awareness,$136.62,20289,259,28,0.9,1.3,0.53,4.88,10.8,49.0,31.4,26.9
+28,Image Ad 28,Lookalike,Brand Awareness,$688.35,3676,44,4,2.2,1.2,15.64,172.09,9.1,43.6,20.1,18.1
+29,Collection Ad 29,Lookalike,Flash Sale,$126.25,5986,75,17,1.2,1.3,1.68,7.43,22.7,60.1,51.7,21.1
+30,Collection Ad 30,Custom Audience,Summer Sale,$634.25,29670,496,84,4.1,1.7,1.28,7.55,16.9,38.1,44.9,8.5
+31,Reel Ad 31,Custom Audience,Brand Awareness,$408.41,8283,179,25,3.1,2.2,2.28,16.34,14.0,34.0,30.5,27.9
+32,Reel Ad 32,Custom Audience,Brand Awareness,$410.68,16340,431,73,6.4,2.6,0.95,5.63,16.9,55.2,44.6,23.4
+33,Carousel Ad 33,Broad Audience,Product Launch,$201.8,22118,1173,120,4.8,5.3,0.17,1.68,10.2,51.3,57.3,29.0
+34,Image Ad 34,Custom Audience,Flash Sale,$650.66,25233,1001,213,6.1,4.0,0.65,3.05,21.3,27.7,22.0,9.3
+35,Reel Ad 35,Cold Audience,Flash Sale,$473.71,3251,108,18,5.8,3.3,4.39,26.32,16.7,39.6,57.1,7.9
+36,Image Ad 36,Retargeting,Brand Awareness,$115.78,21317,914,138,5.9,4.3,0.13,0.84,15.1,31.7,50.0,14.1
+37,Video Ad 37,Lookalike,Product Launch,$1736.42,33761,1917,296,3.2,5.7,0.91,5.87,15.4,42.6,50.8,14.4
+38,Image Ad 38,Retargeting,Brand Awareness,$789.97,7729,354,85,1.3,4.6,2.23,9.29,24.0,46.9,42.7,5.3
+39,Reel Ad 39,Custom Audience,Retargeting Q3,$390.74,26122,646,102,3.6,2.5,0.6,3.83,15.8,60.9,22.6,27.0
+40,Carousel Ad 40,Custom Audience,Product Launch,$262.93,29412,1524,149,7.5,5.2,0.17,1.76,9.8,47.5,55.7,
+41,Story Ad 41,Custom Audience,Product Launch,$230.62,17505,854,97,6.9,4.9,0.27,2.38,11.4,16.8,,
+42,Carousel Ad 42,Lookalike,Brand Awareness,$504.44,7576,379,45,6.4,5.0,1.33,11.21,11.9,,57.0,22.5
+43,Carousel Ad 43,Custom Audience,Holiday Special,$678.49,17289,347,35,4.0,2.0,1.96,19.39,10.1,46.5,24.5,9.8
+44,Reel Ad 44,Lookalike,Flash Sale,$253.07,4284,194,47,4.8,4.5,1.3,5.38,24.2,,19.8,22.7
+45,Reel Ad 45,Broad Audience,Holiday Special,$179.85,14877,285,70,3.7,1.9,0.63,2.57,24.6,46.8,24.1,12.5
+46,Story Ad 46,Lookalike,Brand Awareness,$483.51,5935,267,50,7.1,4.5,1.81,9.67,18.7,40.4,37.9,8.4
+47,Carousel Ad 47,Interest Based,Product Launch,$258.56,5989,188,34,4.9,3.1,1.38,7.6,18.1,35.4,42.7,5.9
+48,Video Ad 48,Retargeting,Summer Sale,$363.8,12750,429,50,4.5,3.4,0.85,7.28,11.7,50.1,45.4,24.7
+49,Carousel Ad 49,Custom Audience,Brand Awareness,$461.86,9303,384,54,4.1,4.1,1.2,8.55,14.1,59.3,39.2,25.0
+50,Collection Ad 50,Broad Audience,Holiday Special,$285.84,16805,871,142,1.3,5.2,0.33,2.01,16.3,,20.3,13.4
+51,Video Ad 51,Broad Audience,Product Launch,$179.75,26384,1243,102,6.3,4.7,0.14,1.76,8.2,33.6,43.2,14.1
+52,Reel Ad 52,Broad Audience,Holiday Special,$768.82,13044,779,164,2.7,6.0,0.99,4.69,21.1,50.3,44.9,
+53,Image Ad 53,Interest Based,Summer Sale,$206.79,27208,494,53,6.4,1.8,0.42,3.9,10.7,42.8,59.6,16.2
+54,Collection Ad 54,Custom Audience,Summer Sale,$344.43,19802,277,57,3.5,1.4,1.24,6.04,20.6,22.5,56.1,
+55,Collection Ad 55,Interest Based,Retargeting Q3,$224.64,9161,316,56,4.0,3.4,0.71,4.01,17.7,27.2,44.8,21.8
+56,Collection Ad 56,Lookalike,Summer Sale,$622.18,12345,159,22,4.3,1.3,3.91,28.28,13.8,57.2,50.3,17.6
+57,Image Ad 57,Broad Audience,Brand Awareness,$732.16,12759,670,92,4.0,5.3,1.09,7.96,13.7,20.2,56.5,9.4
+58,Story Ad 58,Retargeting,Flash Sale,$1787.4,21787,244,57,3.6,1.1,7.33,31.36,23.4,44.9,,22.6
+59,Collection Ad 59,Lookalike,Holiday Special,$525.33,25831,1059,170,5.8,4.1,0.5,3.09,16.1,51.0,50.8,7.9
+60,Carousel Ad 60,Interest Based,Summer Sale,$599.31,34417,1101,191,5.1,3.2,0.54,3.14,17.3,64.2,48.8,13.7
+61,Collection Ad 61,Lookalike,Flash Sale,$142.9,12528,612,99,7.4,4.9,0.23,1.44,16.2,63.9,51.3,
+62,Reel Ad 62,Interest Based,Brand Awareness,$466.6,4310,215,50,6.3,5.0,2.17,9.33,23.3,,20.0,21.9
+63,Carousel Ad 63,Lookalike,Brand Awareness,$584.94,24024,1279,263,6.1,5.3,0.46,2.22,20.6,,44.1,5.1
+64,Reel Ad 64,Interest Based,Summer Sale,$435.97,27759,1217,103,3.3,4.4,0.36,4.23,8.5,48.6,53.8,26.3
+65,Reel Ad 65,Lookalike,Product Launch,$274.21,25708,767,97,6.7,3.0,0.36,2.83,12.6,19.2,48.1,30.0
+66,Video Ad 66,Retargeting,Retargeting Q3,$272.27,21890,665,68,4.5,3.0,0.41,4.0,10.2,50.0,34.5,17.4
+67,Image Ad 67,Cold Audience,Summer Sale,$150.78,6296,84,9,0.6,1.3,1.79,16.75,10.7,46.7,35.7,23.8
+68,Carousel Ad 68,Interest Based,Summer Sale,$455.64,14692,355,82,2.1,2.4,1.28,5.56,23.1,60.5,49.2,21.3
+69,Video Ad 69,Custom Audience,Product Launch,$274.54,30347,792,84,6.6,2.6,0.35,3.27,10.6,43.1,50.9,16.9
+70,Video Ad 70,Interest Based,Brand Awareness,$796.03,10723,468,102,6.8,4.4,1.7,7.8,21.8,24.3,22.3,28.9
+71,Carousel Ad 71,Custom Audience,Product Launch,$434.55,32908,388,94,1.2,1.2,1.12,4.62,24.2,,20.8,17.9
+72,Reel Ad 72,Cold Audience,Retargeting Q3,$284.43,16855,211,20,3.2,1.3,1.35,14.22,9.5,,26.7,14.9
+73,Reel Ad 73,Interest Based,Product Launch,$362.46,7847,122,27,0.5,1.6,2.97,13.42,22.1,39.5,36.1,26.0
+74,Carousel Ad 74,Interest Based,Flash Sale,$1983.74,3053,67,10,5.3,2.2,29.61,198.37,14.9,31.5,20.0,22.8
+75,Collection Ad 75,Cold Audience,Flash Sale,$162.84,22315,377,89,0.6,1.7,0.43,1.83,23.6,16.6,44.0,19.2
+76,Image Ad 76,Broad Audience,Flash Sale,$492.65,4515,236,19,6.5,5.2,2.09,25.93,8.1,23.1,53.9,28.0
+77,Collection Ad 77,Lookalike,Product Launch,$390.84,33984,2012,284,6.2,5.9,0.19,1.38,14.1,55.0,27.1,12.9
+78,Reel Ad 78,Broad Audience,Summer Sale,$108.58,22309,256,35,0.6,1.1,0.42,3.1,13.7,51.3,49.0,27.3
+79,Carousel Ad 79,Cold Audience,Summer Sale,$495.37,10560,181,35,1.7,1.7,2.74,14.15,19.3,64.6,,
+80,Image Ad 80,Retargeting,Holiday Special,$794.81,7032,275,27,6.8,3.9,2.89,29.44,9.8,41.8,29.5,
+81,Reel Ad 81,Cold Audience,Holiday Special,$495.93,7224,311,69,0.6,4.3,1.59,7.19,22.2,26.6,28.7,18.8
+82,Carousel Ad 82,Retargeting,Summer Sale,$347.12,12432,545,110,4.5,4.4,0.64,3.16,20.2,64.2,39.6,
+83,Collection Ad 83,Custom Audience,Summer Sale,$647.02,14469,439,42,6.7,3.0,1.47,15.41,9.6,49.1,58.4,10.0
+84,Carousel Ad 84,Retargeting,Summer Sale,$694.24,19647,1092,126,3.8,5.6,0.64,5.51,11.5,58.9,39.7,23.3
+85,Image Ad 85,Retargeting,Holiday Special,$637.22,33392,508,118,6.6,1.5,1.25,5.4,23.2,20.0,49.2,
+86,Carousel Ad 86,Lookalike,Flash Sale,$784.42,21237,612,123,6.7,2.9,1.28,6.38,20.1,31.0,42.4,20.0
+87,Story Ad 87,Cold Audience,Holiday Special,$751.54,19136,379,54,3.3,2.0,1.98,13.92,14.2,23.1,32.3,11.1
+88,Carousel Ad 88,Custom Audience,Holiday Special,$124.19,17964,856,196,2.4,4.8,0.15,0.63,22.9,24.3,37.7,6.1
+89,Reel Ad 89,Broad Audience,Brand Awareness,$411.12,5874,250,41,1.3,4.3,1.64,10.03,16.4,29.7,54.8,29.6
+90,Story Ad 90,Broad Audience,Brand Awareness,$786.78,33698,1942,179,1.5,5.8,0.41,4.4,9.2,42.6,53.5,18.6

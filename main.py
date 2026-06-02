@@ -535,18 +535,17 @@ with tab_sample:
     # Sample cards
     cols = st.columns(4, gap="small")
     DOMAIN_INFO = [
-        ("Marketing", "30 rows", "Currency types, missing ROAS, outlier spend"),
-        ("Sales",     "30 rows", "Missing revenue, N/A prices, text columns"),
-        ("Finance",   "30 rows", "Missing actuals, mixed types, outlier profit"),
-        ("HR",        "35 rows", "Mixed attrition encoding, missing salary"),
+        ("Marketing", "90 rows"),
+        ("Sales",     "85 rows"),
+        ("Finance",   "80 rows"),
+        ("HR",        "90 rows"),
     ]
-    for col, (domain, size, issues) in zip(cols, DOMAIN_INFO):
+    for col, (domain, size) in zip(cols, DOMAIN_INFO):
         col.markdown(
             f"<div style='border:1px solid #e5e7eb;padding:0.8rem;background:#fafafa;"
             f"font-size:0.75rem;'>"
             f"<div style='font-weight:700;color:#111827;margin-bottom:0.3rem;'>{domain}</div>"
-            f"<div style='color:#9ca3af;margin-bottom:0.4rem;'>{size}</div>"
-            f"<div style='color:#6b7280;line-height:1.4;'>{issues}</div>"
+            f"<div style='color:#9ca3af;'>{size}</div>"
             f"</div>",
             unsafe_allow_html=True
         )

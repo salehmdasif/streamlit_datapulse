@@ -30,3 +30,5 @@ streamlit_fb_ad_data_dashboard/
 
 # Internal planning docs
 PLAN.md
+gen_samples.py
+=0.2.1
