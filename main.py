@@ -433,10 +433,9 @@ with st.sidebar:
             st.rerun()
 
     # Footer
+    st.markdown("---")
     st.markdown(
-        "<div style='position:fixed;bottom:0;left:0;width:260px;"
-        "padding:0.8rem 1rem;border-top:1px solid #21262d;"
-        "background:#0d1117;font-size:0.68rem;color:#484f58;'>"
+        "<div style='font-size:0.68rem;color:#484f58;padding:0.4rem 0;'>"
         "Built by <a href='https://linkedin.com/in/salehmdasif' "
         "style='color:#58a6ff;'>Mohammad Asif</a>"
         " &nbsp;·&nbsp; Ravelweb Ltd</div>",

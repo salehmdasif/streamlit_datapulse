@@ -17,14 +17,15 @@ _BLACK  = "#111827"
 _GRAY   = "#6b7280"
 
 def _base_layout(**kwargs):
-    return dict(
+    base = dict(
         font=_FONT,
         plot_bgcolor="white",
         paper_bgcolor="white",
         showlegend=False,
         margin=dict(l=10, r=10, t=30, b=10),
-        **kwargs
     )
+    base.update(kwargs)
+    return base
 
 def _style_axes(fig):
     fig.update_xaxes(
