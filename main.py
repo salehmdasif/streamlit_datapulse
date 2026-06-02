@@ -69,17 +69,15 @@ div[data-testid="stSidebarContent"] { background-color: #0d1117 !important; }
 section[data-testid="stSidebar"]    {
     border-right: 1px solid #21262d !important;
     padding-top: 0 !important;
-    width: 200px !important;
-    min-width: 200px !important;
-    max-width: 200px !important;
+    width: 250px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
 }
-section[data-testid="stSidebar"] > div:first-child { padding-top: 0 !important; }
-
-/* Sidebar flex layout to push footer down */
 section[data-testid="stSidebar"] > div:first-child {
+    padding-top: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    height: 100vh !important;
+    min-height: 100vh !important;
 }
 
 /* Sidebar text colors */
@@ -103,12 +101,16 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 [data-testid="stSidebarCollapseButton"],
 [data-testid="stSidebarCollapsedControl"] { display: none !important; }
 
-/* Fix file uploader icon text (Material font not loading) */
-[data-testid="stFileUploadDropzone"] [data-testid="stIconMaterial"] { display: none !important; }
-
-/* Fix file uploader duplicate button text */
-[data-testid="stFileUploadDropzone"] button { overflow: hidden !important; }
-[data-testid="stFileUploadDropzone"] button span + span { display: none !important; }
+/* File uploader - remove icon and all button text, show clean label */
+[data-testid="stFileUploadDropzone"] button [data-testid="stIconMaterial"],
+[data-testid="stFileUploadDropzone"] button [data-testid="stMarkdownContainer"] {
+    display: none !important;
+}
+[data-testid="stFileUploadDropzone"] button::after {
+    content: "Browse Files" !important;
+    font-size: 0.8rem !important;
+    font-family: 'Inter', sans-serif !important;
+}
 
 /* ─ Main Buttons ─────────────────────────────────── */
 .stButton > button {
