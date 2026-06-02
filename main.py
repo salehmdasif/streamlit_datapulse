@@ -803,7 +803,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
         "margin-bottom:0.5rem;'>Cleaned Dataset</div>",
         unsafe_allow_html=True
     )
-    st.dataframe(cleaned_df.head(15), use_container_width=True)
+    st.dataframe(cleaned_df.head(10), use_container_width=True)
     st.caption(
         f"Shape: {cleaned_df.shape[0]:,} rows × {cleaned_df.shape[1]} columns  "
         f"·  Memory: {cleaned_df.memory_usage(deep=True).sum() / 1024:.1f} KB"
