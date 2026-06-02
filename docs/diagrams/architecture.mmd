@@ -1,0 +1,45 @@
+flowchart TD
+    A([User uploads CSV / Excel / URL]) --> B
+
+    subgraph APP["main.py — App Controller"]
+        B[Session State Management]
+        B --> S1[Step 1: Load Data]
+        S1 --> S2[Step 2: Clean Data]
+        S2 --> S3[Step 3: Profile & EDA]
+        S3 --> S4[Step 4: Analysis]
+        S4 --> S5[Step 5: Domain Insights]
+    end
+
+    S2 --> C
+    S3 --> D
+    S3 --> E
+    S4 --> F
+    S5 --> G
+
+    subgraph MODULES["Computation Modules"]
+        C[cleaner.py\nMissing Values · Duplicates\nType Fixing · Outliers]
+        D[profiler.py\nColumn Classification\nDomain Detection · Quality Score]
+        E[eda.py\nCorrelation Heatmap\nDistributions · Category Charts]
+        F[analyzer.py\nCorrelation · Group Comparison\nRegression · Hypothesis Testing]
+        G[domain_insights.py\nMarketing · Sales\nFinance · HR]
+    end
+
+    subgraph DATA["Data Layer"]
+        H[Uploaded File\nCSV / XLS / XLSX]
+        I[URL Import]
+        J[Sample Datasets × 4]
+    end
+
+    H --> S1
+    I --> S1
+    J --> S1
+
+    style APP fill:#f8fafc,stroke:#e5e7eb
+    style MODULES fill:#f8fafc,stroke:#e5e7eb
+    style DATA fill:#f8fafc,stroke:#e5e7eb
+    style C fill:#fef9c3,stroke:#ca8a04
+    style D fill:#eff6ff,stroke:#2563eb
+    style E fill:#f0fdf4,stroke:#16a34a
+    style F fill:#f0fdf4,stroke:#16a34a
+    style G fill:#fdf4ff,stroke:#9333ea
+    style B fill:#111827,color:#ffffff,stroke:#111827

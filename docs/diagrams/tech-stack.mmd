@@ -1,0 +1,32 @@
+flowchart TB
+    subgraph UI["UI Layer"]
+        ST["Streamlit\nWeb App Framework"]
+        PL["Plotly\nInteractive Charts"]
+        CSS["Custom CSS\nDark Sidebar · Inter Font · No Border-Radius"]
+    end
+
+    subgraph ANALYTICS["Analytics Layer"]
+        PD["Pandas 2.0+\nData Manipulation & Cleaning"]
+        NP["NumPy\nNumerical Operations & IQR"]
+        SP["SciPy\nPearson Correlation + p-value"]
+    end
+
+    subgraph ML["Statistical / ML Layer"]
+        SK["Scikit-learn\nLinearRegression + StandardScaler"]
+        SM["Statsmodels\nOLS · p-values · Confidence Intervals"]
+    end
+
+    subgraph INFRA["Infrastructure Layer"]
+        GH["GitHub\nVersion Control · Public Repository"]
+        SLC["Streamlit Community Cloud\nFree Hosting · Auto-deploy from GitHub"]
+        PY["Python 3.11+\nRuntime"]
+    end
+
+    UI --> ANALYTICS
+    ANALYTICS --> ML
+    ML --> INFRA
+
+    style UI fill:#eff6ff,stroke:#2563eb
+    style ANALYTICS fill:#f0fdf4,stroke:#16a34a
+    style ML fill:#fdf4ff,stroke:#9333ea
+    style INFRA fill:#f8fafc,stroke:#374151

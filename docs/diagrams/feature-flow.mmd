@@ -1,0 +1,49 @@
+sequenceDiagram
+    actor User
+    participant UI as Streamlit UI
+    participant CL as cleaner.py
+    participant PR as profiler.py
+    participant EDA as eda.py
+    participant AN as analyzer.py
+    participant DI as domain_insights.py
+
+    User->>UI: Upload CSV / Load Sample
+    UI->>UI: Store raw_df in session state
+
+    UI->>CL: raw_df
+    CL->>CL: Normalize columns
+    CL->>CL: Remove duplicates
+    CL->>CL: Fix data types (strip $, convert strings)
+    CL->>CL: Detect missing values
+    CL->>UI: Missing summary + outlier info
+    User->>UI: Choose fill strategy per column
+    User->>UI: Choose outlier action per column
+    User->>UI: Click "Apply Cleaning"
+    UI->>CL: Apply strategies
+    CL->>UI: cleaned_df + CleaningReport
+
+    UI->>PR: cleaned_df
+    PR->>PR: Classify columns (numeric/categorical/datetime/id)
+    PR->>PR: Detect domain from column keywords
+    PR->>PR: Compute quality score (0-100)
+    PR->>UI: domain, quality_score, col_types
+
+    UI->>EDA: cleaned_df
+    EDA->>UI: Correlation heatmap (Plotly)
+    EDA->>UI: Distribution charts per column
+    EDA->>UI: Category bar charts
+
+    User->>UI: Select analysis type + columns
+    UI->>AN: cleaned_df + selected columns
+    AN->>AN: Pearson correlation + p-value
+    AN->>AN: Group aggregation
+    AN->>AN: StandardScaler + LinearRegression
+    AN->>AN: OLS hypothesis testing
+    AN->>UI: Coefficients, R², p-values, CIs
+
+    UI->>DI: cleaned_df + domain
+    DI->>DI: Compute domain KPIs
+    DI->>DI: Filter winning ads / top products / budget variance / attrition
+    DI->>UI: Domain-specific tables + metrics
+
+    UI->>User: Full interactive dashboard
