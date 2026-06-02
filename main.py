@@ -66,9 +66,18 @@ section[data-testid="stSidebar"] {
     background-color: #0d1117 !important;
     border-right: 1px solid #21262d !important;
     padding-top: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    min-width: 240px !important;
 }
 section[data-testid="stSidebar"] > div:first-child {
     padding-top: 0 !important;
+}
+/* Sidebar toggle button - keep visible */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {
+    background-color: #1f2937 !important;
+    color: #e5e7eb !important;
 }
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] span,
@@ -160,6 +169,9 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     color: #6b7280 !important;
     font-size: 0.85rem !important;
 }
+/* Hide hidden label space */
+.stFileUploader [data-testid="InputInstructions"],
+.stFileUploader > label { margin: 0 !important; height: 0 !important; }
 
 /* ─ Text Input ───────────────────────────────────── */
 .stTextInput input {
@@ -461,9 +473,9 @@ tab_upload, tab_url, tab_sample = st.tabs(["  Upload File  ", "  Paste URL  ", "
 with tab_upload:
     st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
-        "Upload your file",
+        "file",
         type=["csv", "xls", "xlsx"],
-        label_visibility="collapsed"
+        label_visibility="hidden"
     )
     if uploaded_file is not None:
         try:
