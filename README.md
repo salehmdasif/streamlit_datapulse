@@ -542,7 +542,10 @@ No environment variables, no database, no API keys required.
 
 ## License
 
-MIT License — free to use, modify, and distribute.
+Free to use, modify, and share for personal and non-commercial purposes.
+Commercial distribution or resale is not permitted without permission.
+
+© 2026 Abu Salah Mohammad Asif
 
 ---
 
