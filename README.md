@@ -8,6 +8,8 @@ Built to prove one thing: **I can take your data from dirty to decision-ready.**
 
 ---
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dpulse.streamlit.app)
+
 ![Python](https://img.shields.io/badge/Python-3.11+-111827?style=flat-square&logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-111827?style=flat-square&logo=streamlit&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Plotly-5.20+-111827?style=flat-square&logo=plotly&logoColor=white)
