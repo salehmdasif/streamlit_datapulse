@@ -1,8 +1,8 @@
-# DataPulse — Universal Data Analytics Dashboard
+# DataPulse - Universal Data Analytics Dashboard
 
-> Upload any structured dataset. DataPulse cleans it, profiles it, and surfaces insights — automatically.
+> Upload any structured dataset. DataPulse cleans it, profiles it, and surfaces insights - automatically.
 
-DataPulse is a portfolio-grade, interactive data analytics web application that demonstrates end-to-end data engineering capability. It takes raw, messy, real-world data and walks it through a complete analytics pipeline: automated cleaning, intelligent profiling, exploratory analysis, statistical modeling, and domain-specific business insights — all without writing a single line of code.
+DataPulse is an interactive data analytics web application that demonstrates end-to-end data engineering capability. It takes raw, messy, real-world data and walks it through a complete analytics pipeline: automated cleaning, intelligent profiling, exploratory analysis, statistical modeling, and domain-specific business insights - all without writing a single line of code.
 
 Built to prove one thing: **I can take your data from dirty to decision-ready.**
 
@@ -13,11 +13,11 @@ Built to prove one thing: **I can take your data from dirty to decision-ready.**
 ![Plotly](https://img.shields.io/badge/Plotly-5.20+-111827?style=flat-square&logo=plotly&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-2.0+-111827?style=flat-square&logo=pandas&logoColor=white)
 ![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.4+-111827?style=flat-square&logo=scikit-learn&logoColor=white)
-![License](https://img.shields.io/badge/License-Portfolio-111827?style=flat-square)
+
 
 ---
 
-**Live Demo:** *(Deploy link — see Phase 5 deployment)*
+**Live Demo:** *(Deploy link - see Phase 5 deployment)*
 **Repository:** [github.com/salehmdasif/streamlit_datapulse](https://github.com/salehmdasif/streamlit_datapulse)
 **Author:** [Abu Salah Mohammad Asif](https://linkedin.com/in/salehmdasif) · Ravelweb Ltd
 
@@ -44,7 +44,7 @@ Built to prove one thing: **I can take your data from dirty to decision-ready.**
 
 ## Problem Statement
 
-Businesses generate enormous amounts of data — ad campaign exports, sales reports, HR spreadsheets, financial summaries. The data is almost never clean. It has missing values, wrong data types, currency symbols where numbers should be, duplicate rows, and outliers that skew everything.
+Businesses generate enormous amounts of data - ad campaign exports, sales reports, HR spreadsheets, financial summaries. The data is almost never clean. It has missing values, wrong data types, currency symbols where numbers should be, duplicate rows, and outliers that skew everything.
 
 Most people either:
 1. Hand it to a data analyst who takes days to produce a static report
@@ -59,11 +59,11 @@ Most people either:
 
 DataPulse is a five-step analytics pipeline wrapped in a clean web interface:
 
-1. **Load** — upload any CSV or Excel file (or try one of 4 sample datasets)
-2. **Clean** — auto-detect and fix data quality issues with full transparency
-3. **Profile** — classify columns, detect business domain, score data quality
-4. **Analyze** — run correlation, group comparison, trend analysis, regression, and hypothesis testing
-5. **Insights** — get domain-specific intelligence tailored to Marketing, Sales, Finance, or HR data
+1. **Load** - upload any CSV or Excel file (or try one of 4 sample datasets)
+2. **Clean** - auto-detect and fix data quality issues with full transparency
+3. **Profile** - classify columns, detect business domain, score data quality
+4. **Analyze** - run correlation, group comparison, trend analysis, regression, and hypothesis testing
+5. **Insights** - get domain-specific intelligence tailored to Marketing, Sales, Finance, or HR data
 
 The entire pipeline runs in the browser. No setup. No code. No waiting.
 
@@ -71,27 +71,30 @@ The entire pipeline runs in the browser. No setup. No code. No waiting.
 
 ## Architecture Overview
 
-DataPulse is built as a modular Python application with a clean separation between computation and presentation. Each analytical capability lives in its own module and is completely independent — new domains or analysis types can be added without touching existing code.
+DataPulse is built as a modular Python application with a clean separation between computation and presentation. Each analytical capability lives in its own module and is completely independent - new domains or analysis types can be added without touching existing code.
 
 ```mermaid
 flowchart TD
-    A[User uploads CSV / Excel / URL] --> B[main.py — App Controller]
+    A[User uploads CSV / Excel / URL] --> B[main.py - App Controller]
     B --> C[cleaner.py\nAuto Cleaning Engine]
     C --> D[profiler.py\nData Profiler + Domain Detector]
-    D --> E[eda.py\nEDA Charts — Plotly]
+    D --> E[eda.py\nEDA Charts - Plotly]
     D --> F[analyzer.py\nStatistical Analysis Engine]
     D --> G[domain_insights.py\nDomain Intelligence]
-    E --> H[Streamlit UI — Step 3]
-    F --> I[Streamlit UI — Step 4]
-    G --> J[Streamlit UI — Step 5]
+    E --> H[Streamlit UI - Step 3]
+    F --> I[Streamlit UI - Step 4]
+    G --> J[Streamlit UI - Step 5]
 
-    style A fill:#f3f4f6,stroke:#374151
-    style B fill:#111827,color:#fff,stroke:#111827
-    style C fill:#fef9c3,stroke:#ca8a04
-    style D fill:#eff6ff,stroke:#2563eb
-    style E fill:#f0fdf4,stroke:#16a34a
-    style F fill:#f0fdf4,stroke:#16a34a
-    style G fill:#fdf4ff,stroke:#9333ea
+    style A fill:#374151,color:#f9fafb,stroke:#374151
+    style B fill:#111827,color:#ffffff,stroke:#111827
+    style C fill:#4b5563,color:#ffffff,stroke:#4b5563
+    style D fill:#374151,color:#f9fafb,stroke:#374151
+    style E fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style F fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style G fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style H fill:#1f2937,color:#d1d5db,stroke:#1f2937
+    style I fill:#1f2937,color:#d1d5db,stroke:#1f2937
+    style J fill:#1f2937,color:#d1d5db,stroke:#1f2937
 ```
 
 > 💡 View this diagram: open `docs/diagrams/architecture.mmd` in [Mermaid Live Editor](https://mermaid.live)
@@ -142,7 +145,7 @@ sequenceDiagram
 
 ## Features
 
-### Step 1 — Intelligent Data Ingestion
+### Step 1 - Intelligent Data Ingestion
 
 **Purpose:** Accept data from any source without friction.
 
@@ -152,13 +155,13 @@ sequenceDiagram
 - Load one of 4 built-in sample datasets (Marketing, Sales, Finance, HR)
 - Each sample contains intentional data quality issues to demonstrate the cleaning engine
 
-**Why it matters:** Real data comes from everywhere — ad platform exports, CRM downloads, manual spreadsheets. DataPulse accepts all of them.
+**Why it matters:** Real data comes from everywhere - ad platform exports, CRM downloads, manual spreadsheets. DataPulse accepts all of them.
 
 ---
 
-### Step 2 — Auto Data Cleaning Engine
+### Step 2 - Auto Data Cleaning Engine
 
-**Purpose:** Systematically detect and fix every common data quality issue — with full user control and a transparent report.
+**Purpose:** Systematically detect and fix every common data quality issue - with full user control and a transparent report.
 
 **What it detects and fixes:**
 
@@ -171,13 +174,13 @@ sequenceDiagram
 | All-null columns | 100% empty detection | Auto-drop |
 | Outliers | IQR method (Q1 - 1.5×IQR, Q3 + 1.5×IQR) | Keep / Cap / Remove / Flag with new column |
 
-**Cleaning Report:** Every action taken is logged — what was changed, how many rows affected, what values were used for filling. Nothing happens silently.
+**Cleaning Report:** Every action taken is logged - what was changed, how many rows affected, what values were used for filling. Nothing happens silently.
 
 **Engineering note:** The cleaning engine operates on a deep copy of the original data. The original is never mutated. If the user re-loads data, state resets completely.
 
 ---
 
-### Step 3 — Data Profiler & Domain Detection
+### Step 3 - Data Profiler & Domain Detection
 
 **Purpose:** Understand the dataset structure before touching it analytically.
 
@@ -189,7 +192,7 @@ sequenceDiagram
 | `categorical` | Object/string + ≤ 20 unique values or < 15% unique ratio |
 | `datetime` | 80%+ values parse as datetime |
 | `boolean` | ≤ 2 unique values |
-| `id_text` | Object/string + > 80% unique ratio (name/ID columns — excluded from analysis) |
+| `id_text` | Object/string + > 80% unique ratio (name/ID columns - excluded from analysis) |
 
 **Data Quality Score (0–100):**
 - 50% weight: completeness (% non-null cells)
@@ -208,11 +211,11 @@ sequenceDiagram
 
 ---
 
-### Step 4 — EDA (Exploratory Data Analysis)
+### Step 4 - EDA (Exploratory Data Analysis)
 
 **Purpose:** Surface the structure and relationships in the data visually.
 
-**Summary Statistics Tab:** Full `describe()` output for all numeric columns — count, mean, std, min, quartiles, max.
+**Summary Statistics Tab:** Full `describe()` output for all numeric columns - count, mean, std, min, quartiles, max.
 
 **Correlation Heatmap:** Full Pearson correlation matrix rendered as an annotated Plotly heatmap (blue-to-red scale, values overlaid). Top 5 strongest correlations listed with plain-English strength labels (Very Strong / Strong / Moderate / Weak).
 
@@ -222,7 +225,7 @@ sequenceDiagram
 
 ---
 
-### Step 5 — Statistical Analysis Engine
+### Step 5 - Statistical Analysis Engine
 
 **Purpose:** Run rigorous statistical methods with one click, explained in plain English.
 
@@ -254,7 +257,7 @@ sequenceDiagram
 
 ---
 
-### Step 6 — Domain Intelligence
+### Step 6 - Domain Intelligence
 
 **Purpose:** Go beyond generic analysis to domain-specific business insights that directly answer relevant questions.
 
@@ -267,17 +270,17 @@ See [Domain Intelligence](#domain-intelligence) section below.
 ```mermaid
 flowchart TB
     subgraph UI["UI Layer"]
-        ST[Streamlit — Web App Framework]
-        PL[Plotly — Interactive Charts]
-        CSS[Custom CSS — Dark Sidebar + Inter Font]
+        ST[Streamlit - Web App Framework]
+        PL[Plotly - Interactive Charts]
+        CSS[Custom CSS - Dark Sidebar + Inter Font]
     end
 
     subgraph COMPUTE["Computation Layer"]
-        PD[Pandas — Data Manipulation]
-        NP[NumPy — Numerical Operations]
-        SK[Scikit-learn — ML + Scaling]
-        SM[Statsmodels — Statistical Testing]
-        SP[SciPy — Pearson Correlation]
+        PD[Pandas - Data Manipulation]
+        NP[NumPy - Numerical Operations]
+        SK[Scikit-learn - ML + Scaling]
+        SM[Statsmodels - Statistical Testing]
+        SP[SciPy - Pearson Correlation]
     end
 
     subgraph DATA["Data Layer"]
@@ -360,7 +363,7 @@ Activated when columns like `employee`, `salary`, `attrition`, `department` are 
 ```
 streamlit_datapulse/
 │
-├── main.py                      ← App entry point — full UI + session state
+├── main.py                      ← App entry point - full UI + session state
 ├── requirements.txt             ← Python dependencies
 ├── .streamlit/
 │   └── config.toml              ← Streamlit theme configuration
@@ -398,7 +401,7 @@ streamlit_datapulse/
 ## Technical Skills Demonstrated
 
 **Data Engineering:**
-- Automated ETL pipeline — raw file → cleaned dataset
+- Automated ETL pipeline - raw file → cleaned dataset
 - Multi-strategy missing value imputation (mean, median, mode, drop)
 - IQR-based outlier detection with 3 resolution strategies
 - Automatic currency symbol stripping and type inference
@@ -412,7 +415,7 @@ streamlit_datapulse/
 - Group aggregation with mean/sum/median/count
 
 **Software Architecture:**
-- Modular design — 5 independent computation modules + 1 controller
+- Modular design - 5 independent computation modules + 1 controller
 - Session state management for multi-step stateful UI in Streamlit
 - Keyword-based domain detection heuristic across 5 business domains
 - Flexible column mapping using keyword matching (handles column name variation)
@@ -452,7 +455,7 @@ streamlit_datapulse/
 
 ## Sample Datasets
 
-All 4 sample datasets are bundled and ready to use — no external data needed. Each has intentional data quality issues to demonstrate the cleaning engine.
+All 4 sample datasets are bundled and ready to use - no external data needed. Each has intentional data quality issues to demonstrate the cleaning engine.
 
 | Dataset | Domain | Rows | Intentional Issues |
 |---|---|---|---|
@@ -492,16 +495,15 @@ No environment variables, no database, no API keys required.
 
 ## Case Study
 
-> See [CASE_STUDY.md](CASE_STUDY.md) for the full client-facing project story — the problem, the approach, the architecture decisions, and the outcome.
+> See [CASE_STUDY.md](CASE_STUDY.md) for the full client-facing project story - the problem, the approach, the architecture decisions, and the outcome.
 
 ---
 
 ## License
 
-This project is published for **portfolio and demonstration purposes**.
 Code is fully functional and open for review.
 
-© 2026 Abu Salah Mohammad Asif — Ravelweb Ltd. All rights reserved.
+© 2026 Abu Salah Mohammad Asif - Ravelweb Ltd. All rights reserved.
 
 ---
 

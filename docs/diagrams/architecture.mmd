@@ -1,7 +1,7 @@
 flowchart TD
     A([User uploads CSV / Excel / URL]) --> B
 
-    subgraph APP["main.py — App Controller"]
+    subgraph APP["main.py - App Controller"]
         B[Session State Management]
         B --> S1[Step 1: Load Data]
         S1 --> S2[Step 2: Clean Data]
@@ -27,19 +27,25 @@ flowchart TD
     subgraph DATA["Data Layer"]
         H[Uploaded File\nCSV / XLS / XLSX]
         I[URL Import]
-        J[Sample Datasets × 4]
+        J[Sample Datasets x4]
     end
 
     H --> S1
     I --> S1
     J --> S1
 
-    style APP fill:#f8fafc,stroke:#e5e7eb
-    style MODULES fill:#f8fafc,stroke:#e5e7eb
-    style DATA fill:#f8fafc,stroke:#e5e7eb
-    style C fill:#fef9c3,stroke:#ca8a04
-    style D fill:#eff6ff,stroke:#2563eb
-    style E fill:#f0fdf4,stroke:#16a34a
-    style F fill:#f0fdf4,stroke:#16a34a
-    style G fill:#fdf4ff,stroke:#9333ea
+    style A fill:#374151,color:#ffffff,stroke:#374151
     style B fill:#111827,color:#ffffff,stroke:#111827
+    style S1 fill:#1f2937,color:#e5e7eb,stroke:#1f2937
+    style S2 fill:#1f2937,color:#e5e7eb,stroke:#1f2937
+    style S3 fill:#1f2937,color:#e5e7eb,stroke:#1f2937
+    style S4 fill:#1f2937,color:#e5e7eb,stroke:#1f2937
+    style S5 fill:#1f2937,color:#e5e7eb,stroke:#1f2937
+    style C fill:#4b5563,color:#ffffff,stroke:#4b5563
+    style D fill:#4b5563,color:#ffffff,stroke:#4b5563
+    style E fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style F fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style G fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style H fill:#374151,color:#f9fafb,stroke:#374151
+    style I fill:#374151,color:#f9fafb,stroke:#374151
+    style J fill:#374151,color:#f9fafb,stroke:#374151

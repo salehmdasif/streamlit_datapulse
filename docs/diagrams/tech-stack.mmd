@@ -2,7 +2,7 @@ flowchart TB
     subgraph UI["UI Layer"]
         ST["Streamlit\nWeb App Framework"]
         PL["Plotly\nInteractive Charts"]
-        CSS["Custom CSS\nDark Sidebar · Inter Font · No Border-Radius"]
+        CSS["Custom CSS\nDark Sidebar · Inter Font"]
     end
 
     subgraph ANALYTICS["Analytics Layer"]
@@ -17,8 +17,8 @@ flowchart TB
     end
 
     subgraph INFRA["Infrastructure Layer"]
-        GH["GitHub\nVersion Control · Public Repository"]
-        SLC["Streamlit Community Cloud\nFree Hosting · Auto-deploy from GitHub"]
+        GH["GitHub\nVersion Control"]
+        SLC["Streamlit Community Cloud\nFree Hosting · Auto-deploy"]
         PY["Python 3.11+\nRuntime"]
     end
 
@@ -26,7 +26,14 @@ flowchart TB
     ANALYTICS --> ML
     ML --> INFRA
 
-    style UI fill:#eff6ff,stroke:#2563eb
-    style ANALYTICS fill:#f0fdf4,stroke:#16a34a
-    style ML fill:#fdf4ff,stroke:#9333ea
-    style INFRA fill:#f8fafc,stroke:#374151
+    style ST fill:#111827,color:#ffffff,stroke:#111827
+    style PL fill:#111827,color:#ffffff,stroke:#111827
+    style CSS fill:#111827,color:#ffffff,stroke:#111827
+    style PD fill:#374151,color:#ffffff,stroke:#374151
+    style NP fill:#374151,color:#ffffff,stroke:#374151
+    style SP fill:#374151,color:#ffffff,stroke:#374151
+    style SK fill:#4b5563,color:#ffffff,stroke:#4b5563
+    style SM fill:#4b5563,color:#ffffff,stroke:#4b5563
+    style GH fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style SLC fill:#6b7280,color:#ffffff,stroke:#6b7280
+    style PY fill:#6b7280,color:#ffffff,stroke:#6b7280
