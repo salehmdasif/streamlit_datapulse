@@ -1,13 +1,21 @@
 """
 DataPulse — Universal Data Analytics Dashboard
-Phase 1: Data Ingestion + Auto Cleaning Engine
+Phase 1 + 2: Data Ingestion, Auto Cleaning, Profiling & EDA
 Author: Abu Salah Mohammad Asif | Ravelweb Ltd
 """
 
 import io
 import streamlit as st
 import pandas as pd
-from modules.cleaner import DataCleaner
+from modules.cleaner  import DataCleaner
+from modules.profiler import DataProfiler, DOMAIN_COLORS
+from modules.eda      import (
+    plot_correlation_heatmap,
+    plot_distribution,
+    plot_categorical_bar,
+    plot_scatter,
+    get_summary_stats,
+)
 
 # ── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -286,6 +294,10 @@ _defaults = {
     'missing_strategies': {},
     'outlier_strategies': {},
     'data_source':        None,
+    # Phase 2
+    'domain':             None,
+    'quality_score':      None,
+    'col_types':          None,
 }
 for _k, _v in _defaults.items():
     if _k not in st.session_state:
@@ -327,7 +339,7 @@ with st.sidebar:
     # Pipeline tracker
     raw_loaded   = st.session_state.raw_df is not None
     clean_done   = st.session_state.cleaning_applied
-    current_step = 1 + raw_loaded + clean_done
+    current_step = 1 + int(raw_loaded) + int(clean_done)
 
     STEPS = [
         (1, "Load Data"),
@@ -786,17 +798,288 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
         mime="text/csv"
     )
 
-    # Phase 2 teaser
-    st.markdown("<div style='height:2rem'></div>", unsafe_allow_html=True)
-    st.markdown(
-        "<div style='border:1px dashed #d1d5db;padding:1rem 1.2rem;"
-        "background:#fafafa;'>"
-        "<div style='font-size:0.72rem;font-weight:700;color:#9ca3af;"
-        "letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;'>"
-        "Next — Phase 2</div>"
-        "<div style='font-size:0.85rem;color:#374151;'>"
-        "Data Profiling · Column Type Classification · Domain Auto-Detection · "
-        "EDA with Correlation Heatmap &amp; Distribution Plots"
-        "</div></div>",
+    # ═══════════════════════════════════════════════════════════════════════
+    # STEP 3 — PROFILE & EDA
+    # ═══════════════════════════════════════════════════════════════════════
+    section_label(3, "Profile & EDA")
+
+    profiler = DataProfiler(cleaned_df)
+
+    # Run profiler
+    domain, match_count = profiler.detect_domain()
+    q_score             = profiler.quality_score()
+    col_types           = profiler.classify_columns()
+    col_stats           = profiler.column_stats()
+
+    st.session_state.update(domain=domain, quality_score=q_score, col_types=col_types)
+
+    # ── Domain + Quality row ───────────────────────────────────────────────
+    dom_bg, dom_border, dom_tag = DOMAIN_COLORS.get(domain, DOMAIN_COLORS["General"])
+    q_color = "#16a34a" if q_score >= 80 else "#d97706" if q_score >= 55 else "#dc2626"
+
+    c_dom, c_score, c_rows, c_cols, c_num, c_cat = st.columns(6, gap="small")
+
+    c_dom.markdown(
+        f"<div style='border:1px solid {dom_border};background:{dom_bg};"
+        f"padding:0.9rem 1rem;'>"
+        f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+        f"letter-spacing:0.06em;text-transform:uppercase;'>Domain</div>"
+        f"<div style='font-size:0.82rem;font-weight:700;color:{dom_border};"
+        f"margin-top:0.25rem;'>{domain}</div>"
+        f"<div style='font-size:0.65rem;color:#9ca3af;margin-top:0.1rem;'>"
+        f"{match_count} keyword match{'es' if match_count != 1 else ''}</div>"
+        f"</div>",
         unsafe_allow_html=True
     )
+    c_score.markdown(
+        f"<div style='border:1px solid #e5e7eb;background:#fafafa;"
+        f"padding:0.9rem 1rem;'>"
+        f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+        f"letter-spacing:0.06em;text-transform:uppercase;'>Quality Score</div>"
+        f"<div style='font-size:1.3rem;font-weight:800;color:{q_color};"
+        f"margin-top:0.25rem;'>{q_score}<span style='font-size:0.7rem;"
+        f"font-weight:500;color:#9ca3af;'> / 100</span></div>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
+
+    num_cols = sum(1 for t in col_types.values() if t == 'numeric')
+    cat_cols = sum(1 for t in col_types.values() if t == 'categorical')
+    dt_cols  = sum(1 for t in col_types.values() if t == 'datetime')
+    id_cols  = sum(1 for t in col_types.values() if t == 'id_text')
+
+    for col_widget, label, val in [
+        (c_rows, "Rows",       f"{cleaned_df.shape[0]:,}"),
+        (c_cols, "Columns",    f"{cleaned_df.shape[1]}"),
+        (c_num,  "Numeric",    f"{num_cols}"),
+        (c_cat,  "Categorical",f"{cat_cols}"),
+    ]:
+        col_widget.markdown(
+            f"<div style='border:1px solid #e5e7eb;background:#fafafa;"
+            f"padding:0.9rem 1rem;'>"
+            f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+            f"letter-spacing:0.06em;text-transform:uppercase;'>{label}</div>"
+            f"<div style='font-size:1.3rem;font-weight:800;color:#111827;"
+            f"margin-top:0.25rem;'>{val}</div>"
+            f"</div>",
+            unsafe_allow_html=True
+        )
+
+    st.markdown("<div style='height:1.2rem'></div>", unsafe_allow_html=True)
+
+    # ── Column Profile Table ───────────────────────────────────────────────
+    TYPE_STYLE = {
+        'numeric':     ("#eff6ff", "#2563eb"),
+        'categorical': ("#f0fdf4", "#16a34a"),
+        'datetime':    ("#fdf4ff", "#9333ea"),
+        'boolean':     ("#fefce8", "#ca8a04"),
+        'id_text':     ("#f8fafc", "#6b7280"),
+        'text':        ("#f8fafc", "#6b7280"),
+        'other':       ("#f8fafc", "#6b7280"),
+    }
+
+    header_html = (
+        "<div style='display:grid;"
+        "grid-template-columns:1.8fr 0.9fr 0.7fr 0.7fr 0.7fr 1.5fr;"
+        "gap:0.4rem;padding:0.4rem 0.8rem;"
+        "border-bottom:2px solid #111827;margin-bottom:0.2rem;'>"
+        + "".join(
+            f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+            f"text-transform:uppercase;letter-spacing:0.06em;'>{h}</div>"
+            for h in ["Column", "Type", "Missing", "Unique", "Miss %", "Sample"]
+        )
+        + "</div>"
+    )
+
+    rows_html = ""
+    for stat in col_stats:
+        bg, fg = TYPE_STYLE.get(stat['type'], ("#f8fafc", "#6b7280"))
+        rows_html += (
+            f"<div style='display:grid;"
+            f"grid-template-columns:1.8fr 0.9fr 0.7fr 0.7fr 0.7fr 1.5fr;"
+            f"gap:0.4rem;padding:0.35rem 0.8rem;"
+            f"border-bottom:1px solid #f3f4f6;align-items:center;'>"
+            f"<div style='font-size:0.8rem;font-weight:500;color:#111827;"
+            f"font-family:monospace;'>{stat['column']}</div>"
+            f"<div><span style='background:{bg};color:{fg};"
+            f"font-size:0.65rem;font-weight:600;padding:0.1rem 0.45rem;"
+            f"letter-spacing:0.04em;'>{stat['type']}</span></div>"
+            f"<div style='font-size:0.78rem;color:#6b7280;'>{stat['missing']}</div>"
+            f"<div style='font-size:0.78rem;color:#6b7280;'>{stat['unique']}</div>"
+            f"<div style='font-size:0.78rem;color:"
+            f"{'#dc2626' if stat['miss_pct'] > 20 else '#6b7280'};'>"
+            f"{stat['miss_pct']}%</div>"
+            f"<div style='font-size:0.75rem;color:#9ca3af;"
+            f"font-family:monospace;overflow:hidden;text-overflow:ellipsis;"
+            f"white-space:nowrap;'>{stat['sample']}</div>"
+            f"</div>"
+        )
+
+    st.markdown(
+        f"<div style='border:1px solid #e5e7eb;background:#fff;'>"
+        f"{header_html}{rows_html}</div>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<div style='height:1.5rem'></div>", unsafe_allow_html=True)
+
+    # ── EDA Tabs ───────────────────────────────────────────────────────────
+    numeric_cols = [c for c, t in col_types.items() if t == 'numeric']
+    cat_cols_list = [c for c, t in col_types.items() if t == 'categorical']
+
+    eda_summary, eda_corr, eda_dist, eda_cat = st.tabs([
+        "  Summary Stats  ",
+        "  Correlation Heatmap  ",
+        "  Distributions  ",
+        "  Categories  ",
+    ])
+
+    # ── Summary Stats ──────────────────────────────────────────────────────
+    with eda_summary:
+        stats_df = get_summary_stats(cleaned_df)
+        if stats_df.empty:
+            notice("No numeric columns found for summary statistics.", "warning")
+        else:
+            st.dataframe(stats_df, use_container_width=True)
+            st.caption(
+                "Showing statistics for numeric columns only. "
+                "Count = non-null values per column."
+            )
+
+    # ── Correlation Heatmap ────────────────────────────────────────────────
+    with eda_corr:
+        if len(numeric_cols) < 2:
+            notice("Need at least 2 numeric columns for correlation analysis.", "warning")
+        else:
+            fig_corr = plot_correlation_heatmap(cleaned_df)
+            if fig_corr:
+                st.markdown(
+                    "<div style='font-size:0.75rem;color:#6b7280;margin-bottom:0.5rem;'>"
+                    "Pearson correlation · Red = positive · Blue = negative · "
+                    "Values close to ±1 = strong relationship</div>",
+                    unsafe_allow_html=True
+                )
+                st.plotly_chart(fig_corr, use_container_width=True)
+
+                # Top correlations
+                num_df  = cleaned_df[numeric_cols].dropna(axis=1, how="all")
+                corr_m  = num_df.corr().abs()
+                pairs   = (
+                    corr_m.where(
+                        pd.DataFrame(
+                            np.tril(np.ones(corr_m.shape), k=-1).astype(bool),
+                            index=corr_m.index, columns=corr_m.columns
+                        )
+                    )
+                    .stack()
+                    .sort_values(ascending=False)
+                    .head(5)
+                )
+                if not pairs.empty:
+                    st.markdown(
+                        "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                        "text-transform:uppercase;letter-spacing:0.06em;"
+                        "margin:0.8rem 0 0.4rem;'>Top 5 Strongest Correlations</div>",
+                        unsafe_allow_html=True
+                    )
+                    for (c1, c2), val in pairs.items():
+                        raw_val = num_df[[c1, c2]].dropna()
+                        direction = "positive" if raw_val.corr().iloc[0, 1] > 0 else "negative"
+                        strength  = "strong" if val > 0.7 else "moderate" if val > 0.4 else "weak"
+                        col_a = "#ef4444" if direction == "positive" else "#2563eb"
+                        st.markdown(
+                            f"<div style='display:flex;align-items:center;gap:0.6rem;"
+                            f"padding:0.3rem 0;border-bottom:1px solid #f3f4f6;'>"
+                            f"<span style='font-family:monospace;font-size:0.78rem;"
+                            f"color:#111827;'>{c1}</span>"
+                            f"<span style='color:#9ca3af;'>↔</span>"
+                            f"<span style='font-family:monospace;font-size:0.78rem;"
+                            f"color:#111827;'>{c2}</span>"
+                            f"<span style='margin-left:auto;font-size:0.72rem;"
+                            f"color:{col_a};font-weight:600;'>{val:.2f}</span>"
+                            f"<span style='font-size:0.68rem;color:#9ca3af;'>"
+                            f"{strength} {direction}</span>"
+                            f"</div>",
+                            unsafe_allow_html=True
+                        )
+
+    # ── Distribution Explorer ──────────────────────────────────────────────
+    with eda_dist:
+        if not numeric_cols:
+            notice("No numeric columns found.", "warning")
+        else:
+            sel_col = st.selectbox(
+                "Select numeric column",
+                numeric_cols,
+                label_visibility="collapsed"
+            )
+            if sel_col:
+                data_series = cleaned_df[sel_col].dropna()
+
+                # Stats strip
+                s1, s2, s3, s4, s5 = st.columns(5, gap="small")
+                for widget, lbl, val in [
+                    (s1, "Mean",   f"{data_series.mean():.2f}"),
+                    (s2, "Median", f"{data_series.median():.2f}"),
+                    (s3, "Std",    f"{data_series.std():.2f}"),
+                    (s4, "Min",    f"{data_series.min():.2f}"),
+                    (s5, "Max",    f"{data_series.max():.2f}"),
+                ]:
+                    widget.markdown(
+                        f"<div style='border:1px solid #e5e7eb;padding:0.55rem 0.7rem;"
+                        f"background:#fafafa;text-align:center;'>"
+                        f"<div style='font-size:0.62rem;font-weight:700;color:#9ca3af;"
+                        f"text-transform:uppercase;letter-spacing:0.05em;'>{lbl}</div>"
+                        f"<div style='font-size:1rem;font-weight:700;color:#111827;"
+                        f"margin-top:0.15rem;'>{val}</div></div>",
+                        unsafe_allow_html=True
+                    )
+
+                st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+                st.plotly_chart(
+                    plot_distribution(cleaned_df, sel_col),
+                    use_container_width=True
+                )
+                st.caption(
+                    f"{len(data_series):,} non-null values · "
+                    f"Skewness: {data_series.skew():.2f} · "
+                    f"Kurtosis: {data_series.kurtosis():.2f}"
+                )
+
+    # ── Category Explorer ──────────────────────────────────────────────────
+    with eda_cat:
+        if not cat_cols_list:
+            notice("No categorical columns detected in this dataset.", "warning")
+        else:
+            sel_cat = st.selectbox(
+                "Select categorical column",
+                cat_cols_list,
+                label_visibility="collapsed"
+            )
+            if sel_cat:
+                counts     = cleaned_df[sel_cat].value_counts()
+                n_unique   = len(counts)
+                top_val    = counts.index[0]
+                top_pct    = round(counts.iloc[0] / len(cleaned_df) * 100, 1)
+
+                ca, cb, cc = st.columns(3, gap="small")
+                for w, lbl, val in [
+                    (ca, "Unique Values", str(n_unique)),
+                    (cb, "Top Value",     str(top_val)[:18]),
+                    (cc, "Top Value %",   f"{top_pct}%"),
+                ]:
+                    w.markdown(
+                        f"<div style='border:1px solid #e5e7eb;padding:0.55rem 0.7rem;"
+                        f"background:#fafafa;'>"
+                        f"<div style='font-size:0.62rem;font-weight:700;color:#9ca3af;"
+                        f"text-transform:uppercase;letter-spacing:0.05em;'>{lbl}</div>"
+                        f"<div style='font-size:1rem;font-weight:700;color:#111827;"
+                        f"margin-top:0.15rem;'>{val}</div></div>",
+                        unsafe_allow_html=True
+                    )
+
+                st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+                st.plotly_chart(
+                    plot_categorical_bar(cleaned_df, sel_cat),
+                    use_container_width=True
+                )
