@@ -61,26 +61,29 @@ html, body, [class*="css"], * {
     max-width: 1200px !important;
 }
 
-/* ─ Sidebar ──────────────────────────────────────── */
+/* ─ Sidebar background ───────────────────────────── */
 [data-testid="stSidebar"],
 section[data-testid="stSidebar"],
 section[data-testid="stSidebar"] > div,
-div[data-testid="stSidebarContent"] {
-    background-color: #0d1117 !important;
-}
-section[data-testid="stSidebar"] {
-    border-right: 1px solid #21262d !important;
-    padding-top: 0 !important;
-}
+div[data-testid="stSidebarContent"] { background-color: #0d1117 !important; }
+section[data-testid="stSidebar"]    { border-right: 1px solid #21262d !important; padding-top: 0 !important; }
 section[data-testid="stSidebar"] > div:first-child { padding-top: 0 !important; }
+
+/* Sidebar flex layout to push footer down */
+section[data-testid="stSidebar"] > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+}
+
+/* Sidebar text colors */
 section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] small { color: #8b949e !important; }
 section[data-testid="stSidebar"] strong,
-section[data-testid="stSidebar"] b    { color: #e6edf3 !important; }
-section[data-testid="stSidebar"] a    { color: #58a6ff !important; text-decoration: none !important; }
-section[data-testid="stSidebar"] hr   { border: none !important; border-top: 1px solid #21262d !important; margin: 0.6rem 0 !important; }
+section[data-testid="stSidebar"] b     { color: #e6edf3 !important; }
+section[data-testid="stSidebar"] a     { color: #58a6ff !important; text-decoration: none !important; }
+section[data-testid="stSidebar"] hr    { border: none !important; border-top: 1px solid #21262d !important; margin: 0.6rem 0 !important; }
 section[data-testid="stSidebar"] .stButton > button {
     background-color: #21262d !important; color: #e6edf3 !important;
     border: 1px solid #30363d !important; width: 100% !important;
@@ -89,6 +92,18 @@ section[data-testid="stSidebar"] .stButton > button {
 section[data-testid="stSidebar"] .stButton > button:hover {
     background-color: #30363d !important; border-color: #58a6ff !important;
 }
+
+/* Hide "keyboard_double" icon text from sidebar collapse button */
+[data-testid="stSidebarCollapseButton"] span,
+[data-testid="stSidebarCollapsedControl"] span,
+button[data-testid="stBaseButton-headerNoPadding"] span[class*="material"] {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+/* Fix file uploader duplicate button text */
+[data-testid="stFileUploadDropzone"] button { overflow: hidden !important; }
+[data-testid="stFileUploadDropzone"] button span + span { display: none !important; }
 
 /* ─ Main Buttons ─────────────────────────────────── */
 .stButton > button {
@@ -413,13 +428,14 @@ with st.sidebar:
                 st.session_state[k] = v
             st.rerun()
 
-    # Footer
-    st.markdown("---")
+    # Footer - pushed to bottom with margin-top auto
     st.markdown(
-        "<div style='font-size:0.68rem;color:#484f58;padding:0.4rem 0;'>"
+        "<div style='margin-top:auto;padding-top:2rem;'>"
+        "<hr style='border:none;border-top:1px solid #21262d;margin-bottom:0.6rem;'>"
+        "<div style='font-size:0.68rem;color:#484f58;padding:0.2rem 0;'>"
         "Built by <a href='https://linkedin.com/in/salehmdasif' "
         "style='color:#58a6ff;'>Mohammad Asif</a>"
-        " &nbsp;·&nbsp; Ravelweb Ltd</div>",
+        " &nbsp;·&nbsp; Ravelweb Ltd</div></div>",
         unsafe_allow_html=True
     )
 
