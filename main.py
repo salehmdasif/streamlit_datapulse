@@ -7,6 +7,7 @@ Author: Abu Salah Mohammad Asif | Ravelweb Ltd
 import io
 import streamlit as st
 import pandas as pd
+import numpy as np
 from modules.cleaner  import DataCleaner
 from modules.profiler import DataProfiler, DOMAIN_COLORS
 from modules.eda      import (
@@ -101,11 +102,6 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     background-color: #30363d !important;
     border-color: #58a6ff !important;
 }
-
-/* ─ Hide sidebar collapse button keyboard hint ───── */
-[data-testid="collapsedControl"] span,
-[data-testid="stSidebarCollapsedControl"] span { display: none !important; }
-button[data-testid="stBaseButton-headerNoPadding"] { display: none !important; }
 
 /* ─ Main Buttons ─────────────────────────────────── */
 .stButton > button {
@@ -554,7 +550,7 @@ if st.session_state.raw_df is not None:
     section_label(2, "Clean Data")
 
     # Raw preview
-    with st.expander(f"Raw Data Preview  ·  {raw_df.shape[0]:,} rows × {raw_df.shape[1]} columns"):
+    with st.expander("Raw Data Preview"):
         st.dataframe(raw_df.head(10), use_container_width=True)
         st.caption(
             f"Memory usage: {raw_df.memory_usage(deep=True).sum() / 1024:.1f} KB  "
@@ -754,14 +750,12 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
     )
 
     # Metric row
-    row_delta = final[0] - orig[0]
-    col_delta = final[1] - orig[1]
     metric_row([
-        ("Original Rows",    f"{orig[0]:,}",    None,                    True),
-        ("Rows After Clean", f"{final[0]:,}",   f"{row_delta:+,} rows" if row_delta != 0 else None, row_delta >= 0),
-        ("Original Columns", f"{orig[1]}",      None,                    True),
-        ("Columns After",    f"{final[1]}",     f"{col_delta:+} cols" if col_delta != 0 else None, col_delta >= 0),
-        ("Actions Taken",    f"{len(actions)}", None,                    True),
+        ("Original Rows",    f"{orig[0]:,}",    None, True),
+        ("Rows After Clean", f"{final[0]:,}",   None, True),
+        ("Original Columns", f"{orig[1]}",      None, True),
+        ("Columns After",    f"{final[1]}",     None, True),
+        ("Actions Taken",    f"{len(actions)}", None, True),
     ])
 
     st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
