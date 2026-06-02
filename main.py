@@ -93,12 +93,36 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     background-color: #30363d !important; border-color: #58a6ff !important;
 }
 
-/* Hide "keyboard_double" icon text from sidebar collapse button */
-[data-testid="stSidebarCollapseButton"] span,
-[data-testid="stSidebarCollapsedControl"] span,
-button[data-testid="stBaseButton-headerNoPadding"] span[class*="material"] {
+/* Sidebar toggle button - show hamburger icon, hide icon font text */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stSidebarCollapsedControl"] button {
+    background-color: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    color: #e5e7eb !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+[data-testid="stSidebarCollapseButton"] button span,
+[data-testid="stSidebarCollapsedControl"] button span {
     font-size: 0 !important;
-    line-height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+}
+[data-testid="stSidebarCollapseButton"] button::after,
+[data-testid="stSidebarCollapsedControl"] button::after {
+    content: "☰";
+    font-size: 1rem !important;
+    color: #e5e7eb !important;
+    font-family: sans-serif !important;
 }
 
 /* Fix file uploader duplicate button text */
