@@ -66,7 +66,13 @@ html, body, [class*="css"], * {
 section[data-testid="stSidebar"],
 section[data-testid="stSidebar"] > div,
 div[data-testid="stSidebarContent"] { background-color: #0d1117 !important; }
-section[data-testid="stSidebar"]    { border-right: 1px solid #21262d !important; padding-top: 0 !important; }
+section[data-testid="stSidebar"]    {
+    border-right: 1px solid #21262d !important;
+    padding-top: 0 !important;
+    width: 200px !important;
+    min-width: 200px !important;
+    max-width: 200px !important;
+}
 section[data-testid="stSidebar"] > div:first-child { padding-top: 0 !important; }
 
 /* Sidebar flex layout to push footer down */
@@ -93,35 +99,12 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     background-color: #30363d !important; border-color: #58a6ff !important;
 }
 
-/* Sidebar toggle buttons - both open and close */
-[data-testid="stSidebarCollapseButton"] { display: flex !important; }
-[data-testid="stSidebarCollapsedControl"] {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: fixed !important;
-    top: 0.6rem !important;
-    left: 0.6rem !important;
-    z-index: 9999 !important;
-}
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stSidebarCollapsedControl"] button {
-    background-color: #1f2937 !important;
-    border: 1px solid #374151 !important;
-    width: 2.2rem !important; height: 2.2rem !important;
-    display: flex !important; align-items: center !important; justify-content: center !important;
-}
-[data-testid="stSidebarCollapseButton"] button span,
-[data-testid="stSidebarCollapsedControl"] button span {
-    font-size: 0 !important; overflow: hidden !important; width: 0 !important;
-}
-[data-testid="stSidebarCollapseButton"] button::after,
-[data-testid="stSidebarCollapsedControl"] button::after {
-    content: "☰" !important;
-    font-size: 1rem !important;
-    color: #e5e7eb !important;
-    font-family: sans-serif !important;
-}
+/* Sidebar fixed width, no collapse */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"] { display: none !important; }
+
+/* Fix file uploader icon text (Material font not loading) */
+[data-testid="stFileUploadDropzone"] [data-testid="stIconMaterial"] { display: none !important; }
 
 /* Fix file uploader duplicate button text */
 [data-testid="stFileUploadDropzone"] button { overflow: hidden !important; }
@@ -449,6 +432,16 @@ with st.sidebar:
             for k, v in _defaults.items():
                 st.session_state[k] = v
             st.rerun()
+
+    st.markdown("<div style='flex:1'></div>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown(
+        "<div style='font-size:0.68rem;color:#484f58;'>"
+        "Built by <a href='https://linkedin.com/in/salehmdasif' "
+        "style='color:#58a6ff;'>Mohammad Asif</a>"
+        " &nbsp;·&nbsp; Ravelweb Ltd</div>",
+        unsafe_allow_html=True
+    )
 
 
 

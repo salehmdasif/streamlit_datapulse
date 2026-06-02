@@ -6,7 +6,9 @@ DataPulse is an interactive data analytics web application built with Python and
 
 ---
 
-**Live Demo:** [dpulse.streamlit.app](https://dpulse.streamlit.app)
+**Live Demo:** [Open in Streamlit](https://dpulse.streamlit.app)
+
+---
 
 ![Python](https://img.shields.io/badge/Python-3.11+-111827?style=flat-square&logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-111827?style=flat-square&logo=streamlit&logoColor=white)
@@ -40,6 +42,7 @@ DataPulse is an interactive data analytics web application built with Python and
 Businesses generate enormous amounts of data - ad campaign exports, sales reports, HR spreadsheets, financial summaries. The data is almost never clean. It has missing values, wrong data types, currency symbols where numbers should be, duplicate rows, and outliers that skew everything.
 
 Most people either:
+
 1. Hand it to a data analyst who takes days to produce a static report
 2. Try to use Excel and give up halfway through
 3. Pay for expensive BI tools that require weeks of setup
@@ -94,14 +97,14 @@ flowchart TD
 
 ### Component Breakdown
 
-| Module | Responsibility |
-|---|---|
-| `main.py` | App controller, session state management, full UI rendering |
-| `cleaner.py` | Missing value detection, duplicate removal, type inference, outlier detection |
-| `profiler.py` | Column classification, data quality scoring, keyword-based domain detection |
-| `eda.py` | All Plotly chart functions (heatmap, distributions, bar charts, scatter, trend) |
-| `analyzer.py` | Pearson correlation, group aggregation, time-series, linear regression, OLS hypothesis testing |
-| `domain_insights.py` | Domain-specific KPI logic for Marketing, Sales, Finance, and HR datasets |
+| Module               | Responsibility                                                                                 |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| `main.py`            | App controller, session state management, full UI rendering                                    |
+| `cleaner.py`         | Missing value detection, duplicate removal, type inference, outlier detection                  |
+| `profiler.py`        | Column classification, data quality scoring, keyword-based domain detection                    |
+| `eda.py`             | All Plotly chart functions (heatmap, distributions, bar charts, scatter, trend)                |
+| `analyzer.py`        | Pearson correlation, group aggregation, time-series, linear regression, OLS hypothesis testing |
+| `domain_insights.py` | Domain-specific KPI logic for Marketing, Sales, Finance, and HR datasets                       |
 
 ---
 
@@ -143,6 +146,7 @@ sequenceDiagram
 **Purpose:** Accept data from any source without friction.
 
 **Capabilities:**
+
 - Upload CSV, XLS, or XLSX files directly
 - Load from a direct URL (CSV/Excel)
 - Load one of 4 built-in sample datasets (Marketing, Sales, Finance, HR)
@@ -158,14 +162,14 @@ sequenceDiagram
 
 **What it detects and fixes:**
 
-| Issue | Detection Method | Resolution Options |
-|---|---|---|
-| Missing values | Per-column null count + percentage | Fill mean / median / mode / drop rows |
-| Duplicate rows | Exact match detection | Auto-remove |
-| Wrong data types | 80% threshold numeric/datetime inference | Auto-convert (strips currency symbols: $, €, £) |
-| Column name noise | Whitespace, case, special characters | Auto-normalize to snake_case |
-| All-null columns | 100% empty detection | Auto-drop |
-| Outliers | IQR method (Q1 - 1.5×IQR, Q3 + 1.5×IQR) | Keep / Cap / Remove / Flag with new column |
+| Issue             | Detection Method                         | Resolution Options                              |
+| ----------------- | ---------------------------------------- | ----------------------------------------------- |
+| Missing values    | Per-column null count + percentage       | Fill mean / median / mode / drop rows           |
+| Duplicate rows    | Exact match detection                    | Auto-remove                                     |
+| Wrong data types  | 80% threshold numeric/datetime inference | Auto-convert (strips currency symbols: $, €, £) |
+| Column name noise | Whitespace, case, special characters     | Auto-normalize to snake_case                    |
+| All-null columns  | 100% empty detection                     | Auto-drop                                       |
+| Outliers          | IQR method (Q1 - 1.5×IQR, Q3 + 1.5×IQR)  | Keep / Cap / Remove / Flag with new column      |
 
 **Cleaning Report:** Every action taken is logged - what was changed, how many rows affected, what values were used for filling. Nothing happens silently.
 
@@ -179,28 +183,29 @@ sequenceDiagram
 
 **Column Classification:**
 
-| Type | How Detected |
-|---|---|
-| `numeric` | `is_numeric_dtype()` |
-| `categorical` | Object/string + ≤ 20 unique values or < 15% unique ratio |
-| `datetime` | 80%+ values parse as datetime |
-| `boolean` | ≤ 2 unique values |
-| `id_text` | Object/string + > 80% unique ratio (name/ID columns - excluded from analysis) |
+| Type          | How Detected                                                                  |
+| ------------- | ----------------------------------------------------------------------------- |
+| `numeric`     | `is_numeric_dtype()`                                                          |
+| `categorical` | Object/string + ≤ 20 unique values or < 15% unique ratio                      |
+| `datetime`    | 80%+ values parse as datetime                                                 |
+| `boolean`     | ≤ 2 unique values                                                             |
+| `id_text`     | Object/string + > 80% unique ratio (name/ID columns - excluded from analysis) |
 
 **Data Quality Score (0–100):**
+
 - 50% weight: completeness (% non-null cells)
 - 30% weight: uniqueness (% unique rows)
 - 20% weight: column health (penalise all-null columns)
 
 **Domain Auto-Detection:** Keyword matching against column names identifies the business domain. The detected domain activates tailored insights in Step 5.
 
-| Domain | Trigger Keywords |
-|---|---|
+| Domain          | Trigger Keywords                                                                |
+| --------------- | ------------------------------------------------------------------------------- |
 | Marketing / Ads | `roas`, `ctr`, `cpc`, `impressions`, `clicks`, `spend`, `campaign`, `hook_rate` |
-| Sales | `revenue`, `order`, `product`, `quantity`, `price`, `discount` |
-| Finance | `profit`, `expense`, `budget`, `income`, `actual`, `cost` |
-| HR / People | `employee`, `salary`, `attrition`, `department`, `tenure`, `gender` |
-| E-commerce | `sku`, `cart`, `checkout`, `conversion`, `aov` |
+| Sales           | `revenue`, `order`, `product`, `quantity`, `price`, `discount`                  |
+| Finance         | `profit`, `expense`, `budget`, `income`, `actual`, `cost`                       |
+| HR / People     | `employee`, `salary`, `attrition`, `department`, `tenure`, `gender`             |
+| E-commerce      | `sku`, `cart`, `checkout`, `conversion`, `aov`                                  |
 
 ---
 
@@ -223,27 +228,32 @@ sequenceDiagram
 **Purpose:** Run rigorous statistical methods with one click, explained in plain English.
 
 **Correlation Analysis:**
+
 - Pearson r, R², p-value, sample size
 - Plain-English interpretation: "Strong positive correlation... explains X% of variance"
 - Significance statement (p < 0.05)
 - Scatter plot with OLS trend line
 
 **Group Comparison:**
+
 - Aggregate any numeric column by any categorical column
 - Aggregation: mean / sum / median / count
 - Horizontal bar chart + values table
 - Instantly answers: "Which campaign type has the highest avg ROAS?"
 
 **Trend Analysis:** *(activates when datetime column detected)*
+
 - Daily/periodic line chart with configurable rolling average (3/7/14/30 periods)
 - Automatically aggregates multiple records per date
 
 **Linear Regression:**
+
 - StandardScaler applied before fitting (coefficients are comparable)
 - Output: R², Adjusted R², F-statistic p-value, AIC, sample size
 - Feature importance bar chart (sorted by |coefficient|)
 
 **Hypothesis Testing:**
+
 - OLS via `statsmodels` for full statistical output
 - Per-feature cards: coefficient, std error, t-statistic, p-value, 95% confidence interval
 - Color-coded: green = statistically significant (p < 0.05), gray = not significant
@@ -287,15 +297,15 @@ flowchart TB
 
 > 💡 View: open `docs/diagrams/tech-stack.mmd` in [Mermaid Live Editor](https://mermaid.live)
 
-| Layer | Technology | Why Chosen |
-|---|---|---|
-| Web Framework | Streamlit 1.32+ | Rapid interactive app development in pure Python; no frontend code required |
-| Charts | Plotly 5.20+ | Interactive, publication-quality charts with hover tooltips; better than Matplotlib for web |
-| Data Manipulation | Pandas 2.0+ | Industry standard for tabular data; rich dtype inference and aggregation API |
-| Statistical Testing | Statsmodels 0.14 | Full OLS output with p-values, confidence intervals, and F-statistics |
-| Regression | Scikit-learn 1.4+ | StandardScaler for feature normalisation before regression |
-| Correlation | SciPy | Pearson r with two-tailed p-value in a single call |
-| Numerical | NumPy 1.26+ | Array operations and IQR outlier bounds |
+| Layer               | Technology        | Why Chosen                                                                                  |
+| ------------------- | ----------------- | ------------------------------------------------------------------------------------------- |
+| Web Framework       | Streamlit 1.32+   | Rapid interactive app development in pure Python; no frontend code required                 |
+| Charts              | Plotly 5.20+      | Interactive, publication-quality charts with hover tooltips; better than Matplotlib for web |
+| Data Manipulation   | Pandas 2.0+       | Industry standard for tabular data; rich dtype inference and aggregation API                |
+| Statistical Testing | Statsmodels 0.14  | Full OLS output with p-values, confidence intervals, and F-statistics                       |
+| Regression          | Scikit-learn 1.4+ | StandardScaler for feature normalisation before regression                                  |
+| Correlation         | SciPy             | Pearson r with two-tailed p-value in a single call                                          |
+| Numerical           | NumPy 1.26+       | Array operations and IQR outlier bounds                                                     |
 
 ---
 
@@ -311,17 +321,17 @@ Activated when columns like `roas`, `ctr`, `cpc`, `impressions` are detected.
 
 **Winning Ad Selector:** The centrepiece feature. Filter ads that meet ALL performance criteria simultaneously. Nine sliders give full control over every threshold:
 
-| Threshold | Default | Meaning |
-|---|---|---|
-| Min Spend | $100 | Only consider ads with meaningful budget |
-| Min ROAS | 2.0x | Return must exceed cost by 2× |
-| Min Result Rate | 20% | At least 1 in 5 viewers must convert |
-| Min Scroll Stop | 25% | Ad must stop the scroll |
-| Min Hook Rate | 30% | First 3 seconds must retain viewers |
-| Min Hold Rate | 10% | Viewer must watch beyond hook |
-| Max CPR | $20 | Cost per result must be under control |
-| Min CTR | 2% | Minimum click-through rate |
-| Max CPC | $1.50 | Cost per click ceiling |
+| Threshold       | Default | Meaning                                  |
+| --------------- | ------- | ---------------------------------------- |
+| Min Spend       | $100    | Only consider ads with meaningful budget |
+| Min ROAS        | 2.0x    | Return must exceed cost by 2×            |
+| Min Result Rate | 20%     | At least 1 in 5 viewers must convert     |
+| Min Scroll Stop | 25%     | Ad must stop the scroll                  |
+| Min Hook Rate   | 30%     | First 3 seconds must retain viewers      |
+| Min Hold Rate   | 10%     | Viewer must watch beyond hook            |
+| Max CPR         | $20     | Cost per result must be under control    |
+| Min CTR         | 2%      | Minimum click-through rate               |
+| Max CPC         | $1.50   | Cost per click ceiling                   |
 
 **Top 5 vs Bottom 5:** Compare best and worst performing ads side-by-side for any metric.
 
@@ -394,6 +404,7 @@ streamlit_datapulse/
 ## Technical Skills Demonstrated
 
 **Data Engineering:**
+
 - Automated ETL pipeline - raw file → cleaned dataset
 - Multi-strategy missing value imputation (mean, median, mode, drop)
 - IQR-based outlier detection with 3 resolution strategies
@@ -401,6 +412,7 @@ streamlit_datapulse/
 - Data quality scoring across completeness, uniqueness, and structural health
 
 **Statistical Analysis:**
+
 - Pearson correlation with significance testing
 - Standardised linear regression (StandardScaler + scikit-learn)
 - OLS regression with full hypothesis testing output (statsmodels)
@@ -408,12 +420,14 @@ streamlit_datapulse/
 - Group aggregation with mean/sum/median/count
 
 **Software Architecture:**
+
 - Modular design - 5 independent computation modules + 1 controller
 - Session state management for multi-step stateful UI in Streamlit
 - Keyword-based domain detection heuristic across 5 business domains
 - Flexible column mapping using keyword matching (handles column name variation)
 
 **Python Engineering:**
+
 - Deep copy pattern for safe data mutation
 - Dataclass-based reporting (`CleaningReport`)
 - Type-annotated function signatures throughout
@@ -421,6 +435,7 @@ streamlit_datapulse/
 - Pure computation modules with zero Streamlit imports (testable independently)
 
 **UI/UX Design:**
+
 - Custom dark sidebar (gray-900) with branded step tracker
 - Injected Inter font with zero border-radius design language
 - Custom HTML/CSS components replacing default Streamlit widgets
@@ -431,18 +446,18 @@ streamlit_datapulse/
 
 ## Project Metrics
 
-| Metric | Value |
-|---|---|
-| Total Python modules | 6 |
-| Lines of code (approx) | ~2,000 |
-| Analysis methods | 5 (correlation, group, trend, regression, hypothesis testing) |
-| Domain intelligence classes | 4 (Marketing, Sales, Finance, HR) |
-| Data quality checks | 6 types |
-| Bundled sample datasets | 4 (with intentional dirty data) |
-| Supported file formats | CSV, XLS, XLSX, URL |
-| Plotly chart types | 7 (heatmap, histogram, box, bar, scatter, line, feature importance) |
-| Build phases completed | 5 / 5 |
-| Estimated complexity | High |
+| Metric                      | Value                                                               |
+| --------------------------- | ------------------------------------------------------------------- |
+| Total Python modules        | 6                                                                   |
+| Lines of code (approx)      | ~2,000                                                              |
+| Analysis methods            | 5 (correlation, group, trend, regression, hypothesis testing)       |
+| Domain intelligence classes | 4 (Marketing, Sales, Finance, HR)                                   |
+| Data quality checks         | 6 types                                                             |
+| Bundled sample datasets     | 4 (with intentional dirty data)                                     |
+| Supported file formats      | CSV, XLS, XLSX, URL                                                 |
+| Plotly chart types          | 7 (heatmap, histogram, box, bar, scatter, line, feature importance) |
+| Build phases completed      | 5 / 5                                                               |
+| Estimated complexity        | High                                                                |
 
 ---
 
@@ -450,12 +465,12 @@ streamlit_datapulse/
 
 All 4 sample datasets are bundled and ready to use - no external data needed. Each has intentional data quality issues to demonstrate the cleaning engine.
 
-| Dataset | Domain | Rows | Intentional Issues |
-|---|---|---|---|
-| `sample_meta_ads.csv` | Marketing / Ads | 30 | Currency strings (`$250.50`), missing ROAS/CPC, one outlier spend value |
-| `sample_sales.csv` | Sales | 30 | Missing revenue, `N/A` unit prices, missing customer names |
-| `sample_finance.csv` | Finance | 30 | Missing actuals, `N/A` expenses, outlier profit, column names with spaces |
-| `sample_hr.csv` | HR / People | 35 | Mixed attrition encoding (Yes/No/1/0), missing salary, duplicate row |
+| Dataset               | Domain          | Rows | Intentional Issues                                                        |
+| --------------------- | --------------- | ---- | ------------------------------------------------------------------------- |
+| `sample_meta_ads.csv` | Marketing / Ads | 30   | Currency strings (`$250.50`), missing ROAS/CPC, one outlier spend value   |
+| `sample_sales.csv`    | Sales           | 30   | Missing revenue, `N/A` unit prices, missing customer names                |
+| `sample_finance.csv`  | Finance         | 30   | Missing actuals, `N/A` expenses, outlier profit, column names with spaces |
+| `sample_hr.csv`       | HR / People     | 35   | Mixed attrition encoding (Yes/No/1/0), missing salary, duplicate row      |
 
 ---
 
