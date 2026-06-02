@@ -542,9 +542,7 @@ No environment variables, no database, no API keys required.
 
 ## License
 
-Code is fully functional and open for review.
-
-© 2026 Abu Salah Mohammad Asif - Ravelweb Ltd. All rights reserved.
+MIT License — free to use, modify, and distribute.
 
 ---
 
