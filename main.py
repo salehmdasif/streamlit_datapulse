@@ -14,7 +14,16 @@ from modules.eda      import (
     plot_distribution,
     plot_categorical_bar,
     plot_scatter,
+    plot_group_comparison,
+    plot_trend,
+    plot_feature_importance,
     get_summary_stats,
+)
+from modules.analyzer import (
+    correlation_analysis,
+    group_comparison,
+    trend_analysis,
+    run_regression,
 )
 
 # ── Page Config ───────────────────────────────────────────────────────────────
@@ -1083,3 +1092,239 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
                     plot_categorical_bar(cleaned_df, sel_cat),
                     use_container_width=True
                 )
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # STEP 4 — ANALYSIS
+    # ═══════════════════════════════════════════════════════════════════════
+    section_label(4, "Analysis")
+
+    datetime_cols = [c for c, t in col_types.items() if t == 'datetime']
+
+    tab_labels = ["  Correlation  ", "  Group Comparison  ", "  Regression  "]
+    if datetime_cols:
+        tab_labels.insert(2, "  Trend Analysis  ")
+
+    tabs_4 = st.tabs(tab_labels)
+    tab_corr = tabs_4[0]
+    tab_grp  = tabs_4[1]
+    tab_reg  = tabs_4[-1]
+    tab_trnd = tabs_4[2] if datetime_cols else None
+
+    # ── Correlation Analysis ───────────────────────────────────────────────
+    with tab_corr:
+        if len(numeric_cols) < 2:
+            notice("Need at least 2 numeric columns.", "warning")
+        else:
+            c1, c2, c3 = st.columns([1, 1, 2], gap="large")
+            with c1:
+                x_col = st.selectbox("X Axis", numeric_cols, key="corr_x")
+            with c2:
+                y_options = [c for c in numeric_cols if c != x_col]
+                y_col = st.selectbox("Y Axis", y_options, key="corr_y")
+            with c3:
+                st.markdown("<div style='height:1.8rem'></div>", unsafe_allow_html=True)
+                run_corr = st.button("Run Correlation")
+
+            if run_corr or (x_col and y_col):
+                result = correlation_analysis(cleaned_df, x_col, y_col)
+                if result:
+                    # Result cards
+                    rc1, rc2, rc3, rc4 = st.columns(4, gap="small")
+                    r_color = "#16a34a" if result['r'] > 0 else "#dc2626"
+                    sig_color = "#16a34a" if result['significant'] else "#d97706"
+                    for w, lbl, val, color in [
+                        (rc1, "Pearson r",   f"{result['r']:.4f}",      r_color),
+                        (rc2, "R² Score",    f"{result['r_squared']:.4f}", "#111827"),
+                        (rc3, "p-Value",     f"{result['p_value']:.4f}", sig_color),
+                        (rc4, "Sample Size", f"{result['n']:,}",          "#111827"),
+                    ]:
+                        w.markdown(
+                            f"<div style='border:1px solid #e5e7eb;padding:0.9rem 1rem;"
+                            f"background:#fafafa;'>"
+                            f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+                            f"letter-spacing:0.06em;text-transform:uppercase;'>{lbl}</div>"
+                            f"<div style='font-size:1.35rem;font-weight:800;color:{color};"
+                            f"margin-top:0.2rem;'>{val}</div></div>",
+                            unsafe_allow_html=True
+                        )
+
+                    st.markdown("<div style='height:0.6rem'></div>", unsafe_allow_html=True)
+
+                    # Interpretation banner
+                    sig_txt = "statistically significant (p < 0.05)" if result['significant'] else "not statistically significant (p ≥ 0.05)"
+                    banner_color = "#f0fdf4" if result['significant'] else "#fffbeb"
+                    border_color = "#16a34a" if result['significant'] else "#d97706"
+                    st.markdown(
+                        f"<div style='border-left:3px solid {border_color};"
+                        f"background:{banner_color};padding:0.7rem 1rem;"
+                        f"font-size:0.83rem;color:#374151;'>"
+                        f"<strong>{result['strength']} {result['direction'].lower()} correlation</strong> "
+                        f"between <code>{x_col}</code> and <code>{y_col}</code>. "
+                        f"This relationship is <strong>{sig_txt}</strong>. "
+                        f"R² = {result['r_squared']:.4f} means <code>{x_col}</code> explains "
+                        f"<strong>{result['r_squared']*100:.1f}%</strong> of the variance in <code>{y_col}</code>."
+                        f"</div>",
+                        unsafe_allow_html=True
+                    )
+
+                    st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+                    st.plotly_chart(
+                        plot_scatter(cleaned_df, x_col, y_col),
+                        use_container_width=True
+                    )
+
+    # ── Group Comparison ───────────────────────────────────────────────────
+    with tab_grp:
+        if not cat_cols_list or not numeric_cols:
+            notice("Need at least 1 categorical and 1 numeric column.", "warning")
+        else:
+            g1, g2, g3, g4 = st.columns([1, 1, 1, 1], gap="small")
+            with g1:
+                grp_cat = st.selectbox("Group by (categorical)", cat_cols_list, key="grp_cat")
+            with g2:
+                grp_num = st.selectbox("Measure (numeric)", numeric_cols, key="grp_num")
+            with g3:
+                grp_agg = st.selectbox("Aggregation", ["mean", "sum", "median", "count"], key="grp_agg")
+            with g4:
+                st.markdown("<div style='height:1.8rem'></div>", unsafe_allow_html=True)
+                run_grp = st.button("Compare Groups")
+
+            if run_grp or grp_cat:
+                grp_result = group_comparison(cleaned_df, grp_cat, grp_num, grp_agg)
+                if grp_result is not None and len(grp_result) > 0:
+                    col_l, col_r = st.columns([2, 1], gap="large")
+                    with col_l:
+                        st.plotly_chart(
+                            plot_group_comparison(grp_result, grp_cat, grp_num, grp_agg),
+                            use_container_width=True
+                        )
+                    with col_r:
+                        st.markdown(
+                            "<div style='font-size:0.68rem;font-weight:700;color:#9ca3af;"
+                            "text-transform:uppercase;letter-spacing:0.06em;"
+                            "margin-bottom:0.5rem;'>Values Table</div>",
+                            unsafe_allow_html=True
+                        )
+                        tbl = grp_result.reset_index()
+                        tbl.columns = [grp_cat, f"{grp_agg}({grp_num})"]
+                        tbl[f"{grp_agg}({grp_num})"] = tbl[f"{grp_agg}({grp_num})"].round(2)
+                        st.dataframe(tbl, use_container_width=True, hide_index=True)
+
+    # ── Trend Analysis ─────────────────────────────────────────────────────
+    if tab_trnd is not None:
+        with tab_trnd:
+            t1, t2, t3 = st.columns([1, 1, 1], gap="small")
+            with t1:
+                trnd_date = st.selectbox("Date column", datetime_cols, key="trnd_date")
+            with t2:
+                trnd_val = st.selectbox("Metric", numeric_cols, key="trnd_val")
+            with t3:
+                rolling_w = st.selectbox("Rolling window", [3, 7, 14, 30], index=1, key="trnd_roll")
+
+            if trnd_date and trnd_val:
+                trnd_df = trend_analysis(cleaned_df, trnd_date, trnd_val, rolling_w)
+                if len(trnd_df) > 0:
+                    st.plotly_chart(plot_trend(trnd_df, trnd_date, trnd_val), use_container_width=True)
+                    st.caption(f"{len(trnd_df)} data points · {rolling_w}-period rolling average (red dashed)")
+
+    # ── Linear Regression ──────────────────────────────────────────────────
+    with tab_reg:
+        if len(numeric_cols) < 2:
+            notice("Need at least 2 numeric columns for regression.", "warning")
+        else:
+            r1, r2 = st.columns([1, 2], gap="large")
+            with r1:
+                reg_target = st.selectbox(
+                    "Target variable (Y)", numeric_cols, key="reg_target"
+                )
+            with r2:
+                feat_options = [c for c in numeric_cols if c != reg_target]
+                reg_features = st.multiselect(
+                    "Feature columns (X) — select one or more",
+                    feat_options, key="reg_features"
+                )
+
+            st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
+            run_reg = st.button("Run Regression")
+
+            if run_reg:
+                if not reg_features:
+                    notice("Select at least one feature column.", "warning")
+                else:
+                    reg_result = run_regression(cleaned_df, reg_target, reg_features)
+                    if reg_result is None:
+                        notice("Not enough data to run regression (need ≥ 5 rows).", "error")
+                    else:
+                        # Model score cards
+                        rs1, rs2, rs3, rs4, rs5 = st.columns(5, gap="small")
+                        r2_color = "#16a34a" if reg_result['r2'] >= 0.7 else "#d97706" if reg_result['r2'] >= 0.4 else "#dc2626"
+                        fp_color = "#16a34a" if reg_result['f_pvalue'] < 0.05 else "#dc2626"
+                        for w, lbl, val, color in [
+                            (rs1, "R² Score",    f"{reg_result['r2']:.4f}",     r2_color),
+                            (rs2, "Adj. R²",     f"{reg_result['adj_r2']:.4f}", r2_color),
+                            (rs3, "F p-Value",   f"{reg_result['f_pvalue']:.4f}", fp_color),
+                            (rs4, "Sample Size", f"{reg_result['n']:,}",         "#111827"),
+                            (rs5, "AIC",         f"{reg_result['aic']:.1f}",     "#111827"),
+                        ]:
+                            w.markdown(
+                                f"<div style='border:1px solid #e5e7eb;padding:0.9rem 1rem;"
+                                f"background:#fafafa;'>"
+                                f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+                                f"letter-spacing:0.06em;text-transform:uppercase;'>{lbl}</div>"
+                                f"<div style='font-size:1.35rem;font-weight:800;color:{color};"
+                                f"margin-top:0.2rem;'>{val}</div></div>",
+                                unsafe_allow_html=True
+                            )
+
+                        st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+
+                        col_fi, col_ht = st.columns([1, 1], gap="large")
+
+                        with col_fi:
+                            st.markdown(
+                                "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                                "text-transform:uppercase;letter-spacing:0.06em;"
+                                "margin-bottom:0.5rem;'>Feature Importance</div>",
+                                unsafe_allow_html=True
+                            )
+                            st.plotly_chart(
+                                plot_feature_importance(reg_result['coef_df']),
+                                use_container_width=True
+                            )
+                            st.caption("Standardised coefficients — larger absolute value = more influence on target")
+
+                        with col_ht:
+                            st.markdown(
+                                "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                                "text-transform:uppercase;letter-spacing:0.06em;"
+                                "margin-bottom:0.5rem;'>Hypothesis Testing</div>",
+                                unsafe_allow_html=True
+                            )
+                            st.caption("p < 0.05 = statistically significant feature")
+
+                            hyp = reg_result['hyp_df']
+                            for _, row in hyp.iterrows():
+                                sig   = row['Significant']
+                                color = "#16a34a" if sig else "#9ca3af"
+                                badge = "significant" if sig else "not significant"
+                                st.markdown(
+                                    f"<div style='border:1px solid #e5e7eb;"
+                                    f"border-left:3px solid {color};"
+                                    f"padding:0.5rem 0.8rem;margin-bottom:0.4rem;"
+                                    f"background:#fafafa;'>"
+                                    f"<div style='display:flex;justify-content:space-between;"
+                                    f"align-items:center;'>"
+                                    f"<span style='font-family:monospace;font-size:0.78rem;"
+                                    f"font-weight:600;color:#111827;'>{row['Feature']}</span>"
+                                    f"<span style='font-size:0.65rem;font-weight:700;"
+                                    f"color:{color};text-transform:uppercase;"
+                                    f"letter-spacing:0.04em;'>{badge}</span></div>"
+                                    f"<div style='font-size:0.72rem;color:#6b7280;"
+                                    f"margin-top:0.3rem;'>"
+                                    f"coef: <b>{row['Coefficient']}</b> &nbsp;·&nbsp; "
+                                    f"p: <b>{row['p-Value']}</b> &nbsp;·&nbsp; "
+                                    f"t: {row['t-Statistic']} &nbsp;·&nbsp; "
+                                    f"CI: [{row['CI Lower']}, {row['CI Upper']}]"
+                                    f"</div></div>",
+                                    unsafe_allow_html=True
+                                )

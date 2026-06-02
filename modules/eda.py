@@ -163,6 +163,115 @@ def plot_categorical_bar(df: pd.DataFrame, column: str, top_n: int = 15) -> go.F
     return fig
 
 
+# ── Group Comparison Bar ──────────────────────────────────────────────────────
+
+def plot_group_comparison(series: pd.Series, cat_col: str, num_col: str, agg: str) -> go.Figure:
+    """Horizontal bar chart for group comparison results."""
+    fig = go.Figure(go.Bar(
+        x=series.values,
+        y=series.index.astype(str),
+        orientation="h",
+        marker=dict(
+            color=[_BLACK if i == 0 else "#d1d5db" for i in range(len(series))],
+            line=dict(color="white", width=0.4),
+        ),
+        text=[f"{v:,.2f}" for v in series.values],
+        textposition="outside",
+        textfont=dict(size=9, color=_GRAY),
+        hovertemplate="%{y}: %{x:,.2f}<extra></extra>",
+    ))
+
+    height = max(240, min(len(series) * 36, 520))
+    fig.update_layout(
+        **_base_layout(height=height),
+        title=dict(
+            text=f"{agg.capitalize()} of <b>{num_col}</b> by <b>{cat_col}</b>",
+            font=dict(size=11, color=_GRAY), x=0,
+        ),
+        xaxis=dict(showgrid=True, gridcolor=_GRID, linecolor=_LINE,
+                   tickfont=dict(size=9, color=_GRAY)),
+        yaxis=dict(showgrid=False, linecolor=_LINE,
+                   tickfont=dict(size=9, color=_GRAY),
+                   autorange="reversed"),
+        bargap=0.3,
+    )
+    return fig
+
+
+# ── Trend Line Chart ──────────────────────────────────────────────────────────
+
+def plot_trend(df: pd.DataFrame, date_col: str, value_col: str) -> go.Figure:
+    """Line chart with optional rolling average overlay."""
+    fig = go.Figure()
+
+    # Actual values
+    fig.add_trace(go.Scatter(
+        x=df[date_col], y=df[value_col],
+        mode="lines+markers",
+        name=value_col,
+        line=dict(color=_BLACK, width=1.5),
+        marker=dict(size=4, color=_BLACK),
+        hovertemplate="%{x|%Y-%m-%d}: %{y:,.2f}<extra></extra>",
+    ))
+
+    # Rolling average
+    if "rolling_avg" in df.columns:
+        fig.add_trace(go.Scatter(
+            x=df[date_col], y=df["rolling_avg"],
+            mode="lines",
+            name="Rolling Avg",
+            line=dict(color="#ef4444", width=1.5, dash="dot"),
+            hovertemplate="Rolling: %{y:,.2f}<extra></extra>",
+        ))
+
+    fig.update_layout(
+        **_base_layout(height=300, showlegend=True),
+        legend=dict(
+            font=dict(size=9, color=_GRAY),
+            bgcolor="white",
+            bordercolor=_LINE,
+            borderwidth=1,
+            x=0.01, y=0.99,
+        ),
+        xaxis=dict(showgrid=False, linecolor=_LINE,
+                   tickfont=dict(size=9, color=_GRAY)),
+        yaxis=dict(showgrid=True, gridcolor=_GRID, linecolor=_LINE,
+                   tickfont=dict(size=9, color=_GRAY)),
+    )
+    return fig
+
+
+# ── Feature Importance Bar ────────────────────────────────────────────────────
+
+def plot_feature_importance(coef_df: pd.DataFrame) -> go.Figure:
+    """Horizontal bar chart for regression coefficients."""
+    colors = ["#111827" if v >= 0 else "#ef4444" for v in coef_df["Coefficient"]]
+
+    fig = go.Figure(go.Bar(
+        x=coef_df["Coefficient"],
+        y=coef_df["Feature"],
+        orientation="h",
+        marker=dict(color=colors, line=dict(color="white", width=0.4)),
+        text=coef_df["Coefficient"].round(3),
+        textposition="outside",
+        textfont=dict(size=9, color=_GRAY),
+        hovertemplate="%{y}: %{x:.4f}<extra></extra>",
+    ))
+
+    height = max(220, min(len(coef_df) * 38, 480))
+    fig.update_layout(
+        **_base_layout(height=height),
+        xaxis=dict(showgrid=True, gridcolor=_GRID, linecolor=_LINE,
+                   zeroline=True, zerolinecolor=_LINE,
+                   tickfont=dict(size=9, color=_GRAY)),
+        yaxis=dict(showgrid=False, linecolor=_LINE,
+                   tickfont=dict(size=9, color=_GRAY),
+                   autorange="reversed"),
+        bargap=0.3,
+    )
+    return fig
+
+
 # ── Scatter Plot (Correlation) ────────────────────────────────────────────────
 
 def plot_scatter(df: pd.DataFrame, x_col: str, y_col: str) -> go.Figure:
