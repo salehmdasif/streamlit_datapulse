@@ -32,6 +32,18 @@ from modules.domain_insights import (
     FinanceInsights,
     HRInsights,
 )
+from modules.charts import (
+    plot_pie,
+    plot_bar,
+    plot_line,
+    plot_bubble,
+    plot_funnel,
+    plot_waterfall,
+    plot_treemap,
+    plot_stacked_bar,
+    plot_gauges,
+    fig_to_png,
+)
 
 # ── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -298,7 +310,7 @@ def metric_row(items):
             unsafe_allow_html=True
         )
 
-def section_label(number, title, total=5):
+def section_label(number, title, total=6):
     """Step label like  ── 02 / 05  CLEAN DATA ──"""
     st.markdown(
         f"<div style='display:flex;align-items:center;gap:0.8rem;"
@@ -378,6 +390,7 @@ with st.sidebar:
         (3, "Profile & EDA"),
         (4, "Analysis"),
         (5, "Domain Insights"),
+        (6, "Analytics Charts"),
     ]
 
     st.markdown(
@@ -1640,3 +1653,257 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
             "correlation, group comparison, regression, and hypothesis testing.",
             "info"
         )
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # STEP 6 - ANALYTICS CHARTS
+    # ═══════════════════════════════════════════════════════════════════════
+    section_label(6, "Analytics Charts")
+
+    st.markdown(
+        "<p style='font-size:0.83rem;color:#6b7280;margin:0 0 1.2rem;'>"
+        "Build colorful charts from your cleaned data — download any chart as a PNG.</p>",
+        unsafe_allow_html=True,
+    )
+
+    _numeric_cols = [c for c, t in col_types.items() if t == "numeric"]
+    _cat_cols     = [c for c, t in col_types.items() if t == "categorical"]
+    _all_cols     = list(cleaned_df.columns)
+
+    (
+        _tab_pie, _tab_bar, _tab_line, _tab_bubble,
+        _tab_funnel, _tab_waterfall, _tab_treemap, _tab_stacked, _tab_gauge,
+    ) = st.tabs([
+        "  Pie  ",
+        "  Bar  ",
+        "  Line  ",
+        "  Bubble  ",
+        "  Funnel  ",
+        "  Waterfall  ",
+        "  Treemap  ",
+        "  Stacked Bar  ",
+        "  Gauge  ",
+    ])
+
+    def _dl_button(fig, filename: str, key: str):
+        png = fig_to_png(fig)
+        if png:
+            st.download_button(
+                label="↓ Download PNG",
+                data=png,
+                file_name=filename,
+                mime="image/png",
+                key=key,
+            )
+        else:
+            st.caption("Install kaleido for PNG export: `pip install kaleido`")
+
+    # ── Pie ───────────────────────────────────────────────────────────────
+    with _tab_pie:
+        if not _cat_cols:
+            notice("No categorical columns found for a pie chart.", "warning")
+        else:
+            _pc1, _pc2 = st.columns([1, 3], gap="large")
+            with _pc1:
+                st.markdown("**Options**")
+                pie_col   = st.selectbox("Column", _cat_cols, key="pie_col")
+                pie_top_n = st.selectbox("Show top N", [5, 8, 10, 15, 20], index=2, key="pie_n")
+            with _pc2:
+                if pie_col:
+                    _fig_pie = plot_pie(cleaned_df, pie_col, top_n=int(pie_top_n))
+                    st.plotly_chart(_fig_pie, use_container_width=True)
+                    _dl_button(_fig_pie, f"pie_{pie_col}.png", "dl_pie")
+
+    # ── Bar ───────────────────────────────────────────────────────────────
+    with _tab_bar:
+        if not _cat_cols or not _numeric_cols:
+            notice("Need at least 1 categorical and 1 numeric column.", "warning")
+        else:
+            _bc1, _bc2, _bc3, _bc4 = st.columns([1, 1, 1, 1], gap="small")
+            with _bc1:
+                bar_cat   = st.selectbox("Category (X)", _cat_cols, key="bar_cat")
+            with _bc2:
+                bar_num   = st.selectbox("Metric (Y)", _numeric_cols, key="bar_num")
+            with _bc3:
+                bar_agg   = st.selectbox("Aggregation", ["sum", "mean", "median", "count"], key="bar_agg")
+            with _bc4:
+                bar_top_n = st.selectbox("Show top N", [5, 10, 15, 20, 30], index=1, key="bar_n")
+            if bar_cat and bar_num:
+                _fig_bar = plot_bar(cleaned_df, bar_cat, bar_num, bar_agg, top_n=int(bar_top_n))
+                st.plotly_chart(_fig_bar, use_container_width=True)
+                _dl_button(_fig_bar, f"bar_{bar_cat}_{bar_num}.png", "dl_bar")
+
+    # ── Line ──────────────────────────────────────────────────────────────
+    with _tab_line:
+        if not _numeric_cols:
+            notice("Need numeric columns for a line chart.", "warning")
+        else:
+            _lc1, _lc2 = st.columns([1, 2], gap="large")
+            with _lc1:
+                st.markdown("**Options**")
+                line_x  = st.selectbox("X Axis", _all_cols, key="line_x")
+            with _lc2:
+                line_ys = st.multiselect(
+                    "Y Axis — pick one or more metrics",
+                    _numeric_cols,
+                    default=_numeric_cols[:1],
+                    key="line_ys",
+                )
+            if line_x and line_ys:
+                _fig_line = plot_line(cleaned_df, line_x, line_ys)
+                st.plotly_chart(_fig_line, use_container_width=True)
+                _dl_button(_fig_line, f"line_{line_x}.png", "dl_line")
+            else:
+                notice("Select at least one Y metric.", "info")
+
+    # ── Bubble ────────────────────────────────────────────────────────────
+    with _tab_bubble:
+        if len(_numeric_cols) < 2:
+            notice("Need at least 2 numeric columns for a bubble chart.", "warning")
+        else:
+            _bb1, _bb2, _bb3, _bb4 = st.columns([1, 1, 1, 1], gap="small")
+            with _bb1:
+                bub_x    = st.selectbox("X Axis",      _numeric_cols, index=0,                             key="bub_x")
+            with _bb2:
+                bub_y    = st.selectbox("Y Axis",      _numeric_cols, index=min(1, len(_numeric_cols)-1),   key="bub_y")
+            with _bb3:
+                bub_size = st.selectbox("Bubble Size", _numeric_cols, index=min(2, len(_numeric_cols)-1),   key="bub_size")
+            with _bb4:
+                bub_color_opts = ["(none)"] + _cat_cols
+                bub_color_sel  = st.selectbox("Color by (optional)", bub_color_opts, key="bub_color")
+                bub_color      = None if bub_color_sel == "(none)" else bub_color_sel
+            if bub_x and bub_y and bub_size:
+                _fig_bub = plot_bubble(cleaned_df, bub_x, bub_y, bub_size, bub_color)
+                st.plotly_chart(_fig_bub, use_container_width=True)
+                _dl_button(_fig_bub, f"bubble_{bub_x}_{bub_y}.png", "dl_bubble")
+
+    # ── Funnel ────────────────────────────────────────────────────────────
+    with _tab_funnel:
+        if not _cat_cols or not _numeric_cols:
+            notice("Need at least 1 categorical and 1 numeric column.", "warning")
+        else:
+            _fc1, _fc2, _fc3, _fc4 = st.columns([1, 1, 1, 1], gap="small")
+            with _fc1:
+                fun_cat  = st.selectbox("Stage / Category", _cat_cols, key="fun_cat")
+            with _fc2:
+                fun_num  = st.selectbox("Value", _numeric_cols, key="fun_num")
+            with _fc3:
+                fun_agg  = st.selectbox("Aggregation", ["sum", "mean", "count", "median"], key="fun_agg")
+            with _fc4:
+                fun_sort = st.selectbox("Sort", ["Yes — largest first", "No — keep order"], key="fun_sort")
+            if fun_cat and fun_num:
+                _fig_fun = plot_funnel(
+                    cleaned_df, fun_cat, fun_num,
+                    agg=fun_agg, sort=(fun_sort.startswith("Yes"))
+                )
+                st.plotly_chart(_fig_fun, use_container_width=True)
+                _dl_button(_fig_fun, f"funnel_{fun_cat}.png", "dl_funnel")
+
+    # ── Waterfall ─────────────────────────────────────────────────────────
+    with _tab_waterfall:
+        if not _cat_cols or not _numeric_cols:
+            notice("Need at least 1 categorical and 1 numeric column.", "warning")
+        else:
+            _wc1, _wc2, _wc3, _wc4 = st.columns([1, 1, 1, 1], gap="small")
+            with _wc1:
+                wf_cat  = st.selectbox("Category", _cat_cols, key="wf_cat")
+            with _wc2:
+                wf_num  = st.selectbox("Value", _numeric_cols, key="wf_num")
+            with _wc3:
+                wf_agg  = st.selectbox("Aggregation", ["sum", "mean", "count", "median"], key="wf_agg")
+            with _wc4:
+                wf_sort = st.selectbox("Sort", ["Yes — largest first", "No — keep order"], key="wf_sort")
+            if wf_cat and wf_num:
+                st.caption("Green = positive contribution · Red = negative · Purple = running total")
+                _fig_wf = plot_waterfall(
+                    cleaned_df, wf_cat, wf_num,
+                    agg=wf_agg, sort_vals=(wf_sort.startswith("Yes"))
+                )
+                st.plotly_chart(_fig_wf, use_container_width=True)
+                _dl_button(_fig_wf, f"waterfall_{wf_cat}.png", "dl_waterfall")
+
+    # ── Treemap ───────────────────────────────────────────────────────────
+    with _tab_treemap:
+        if not _cat_cols or not _numeric_cols:
+            notice("Need at least 1 categorical and 1 numeric column.", "warning")
+        else:
+            _tc1, _tc2, _tc3 = st.columns([1, 1, 1], gap="small")
+            with _tc1:
+                tm_cat  = st.selectbox("Primary Group", _cat_cols, key="tm_cat")
+            with _tc2:
+                tm_num  = st.selectbox("Size (Value)", _numeric_cols, key="tm_num")
+            with _tc3:
+                tm_sub_opts = ["(none)"] + [c for c in _cat_cols if c != tm_cat]
+                tm_sub_sel  = st.selectbox("Drill-down (optional)", tm_sub_opts, key="tm_sub")
+                tm_sub      = None if tm_sub_sel == "(none)" else tm_sub_sel
+            if tm_cat and tm_num:
+                st.caption("Larger block = higher value · Click a block to drill down")
+                _fig_tm = plot_treemap(cleaned_df, tm_cat, tm_num, sub_col=tm_sub)
+                st.plotly_chart(_fig_tm, use_container_width=True)
+                _dl_button(_fig_tm, f"treemap_{tm_cat}.png", "dl_treemap")
+
+    # ── Stacked Bar ───────────────────────────────────────────────────────
+    with _tab_stacked:
+        if len(_cat_cols) < 2 or not _numeric_cols:
+            notice("Need at least 2 categorical and 1 numeric column.", "warning")
+        else:
+            _sb1, _sb2, _sb3, _sb4, _sb5 = st.columns([1, 1, 1, 1, 1], gap="small")
+            with _sb1:
+                sb_x    = st.selectbox("X Axis (group)",  _cat_cols,     key="sb_x")
+            with _sb2:
+                sb_stk  = st.selectbox("Stack by",        [c for c in _cat_cols if c != sb_x], key="sb_stk")
+            with _sb3:
+                sb_num  = st.selectbox("Metric (Y)",      _numeric_cols, key="sb_num")
+            with _sb4:
+                sb_agg  = st.selectbox("Aggregation",     ["sum", "mean", "count", "median"], key="sb_agg")
+            with _sb5:
+                sb_norm = st.selectbox("Mode", ["Regular", "100% Normalized"], key="sb_norm")
+            if sb_x and sb_stk and sb_num:
+                _fig_sb = plot_stacked_bar(
+                    cleaned_df, sb_x, sb_stk, sb_num,
+                    agg=sb_agg, normalized=(sb_norm == "100% Normalized")
+                )
+                st.plotly_chart(_fig_sb, use_container_width=True)
+                _dl_button(_fig_sb, f"stacked_{sb_x}_{sb_stk}.png", "dl_stacked")
+
+    # ── Gauge ─────────────────────────────────────────────────────────────
+    with _tab_gauge:
+        if not _numeric_cols:
+            notice("Need numeric columns for gauges.", "warning")
+        else:
+            _gc1, _gc2, _gc3 = st.columns([2, 1, 1], gap="large")
+            with _gc1:
+                gauge_cols = st.multiselect(
+                    "Metrics to display (max 4)",
+                    _numeric_cols,
+                    default=_numeric_cols[:min(2, len(_numeric_cols))],
+                    key="gauge_cols",
+                )
+            with _gc2:
+                gauge_agg  = st.selectbox("Aggregation", ["mean", "sum", "max", "min", "median"], key="gauge_agg")
+            with _gc3:
+                gauge_range = st.selectbox("Range", ["Auto (data)", "Auto (0 → max)", "Auto (min → max)"], key="gauge_range")
+
+            if gauge_cols:
+                selected = gauge_cols[:4]
+                items = []
+                for col in selected:
+                    series = cleaned_df[col].dropna()
+                    series = pd.to_numeric(series, errors="coerce").dropna()
+                    if series.empty:
+                        continue
+                    val = getattr(series, gauge_agg)()
+                    if gauge_range == "Auto (0 → max)":
+                        mn, mx = 0.0, float(series.max())
+                    elif gauge_range == "Auto (min → max)":
+                        mn, mx = float(series.min()), float(series.max())
+                    else:  # Auto (data)
+                        mn = 0.0 if series.min() >= 0 else float(series.min())
+                        mx = float(series.max())
+                    if mn == mx:
+                        mx = mn + 1
+                    items.append((col.replace("_", " ").title(), float(val), mn, mx))
+
+                if items:
+                    _fig_gauge = plot_gauges(items)
+                    st.plotly_chart(_fig_gauge, use_container_width=True)
+                    _dl_button(_fig_gauge, "gauge_metrics.png", "dl_gauge")
