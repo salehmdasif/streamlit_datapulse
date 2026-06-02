@@ -1,5 +1,5 @@
 """
-DataPulse — Universal Data Analytics Dashboard
+DataPulse - Universal Data Analytics Dashboard
 Phase 1 + 2: Data Ingestion, Auto Cleaning, Profiling & EDA
 Author: Abu Salah Mohammad Asif | Ravelweb Ltd
 """
@@ -425,7 +425,7 @@ with st.sidebar:
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# MAIN CONTENT — PAGE HEADER
+# MAIN CONTENT - PAGE HEADER
 # ═════════════════════════════════════════════════════════════════════════════
 st.markdown("""
 <div style='padding:2rem 0 1.5rem;border-bottom:1px solid #f3f4f6;margin-bottom:0.5rem;'>
@@ -437,14 +437,14 @@ st.markdown("""
                      letter-spacing:0.06em;text-transform:uppercase;'>BETA</span>
     </div>
     <p style='color:#6b7280;font-size:0.88rem;margin:0.3rem 0 0;'>
-        Upload any structured dataset — DataPulse cleans it, profiles it, and surfaces insights.
+        Upload any structured dataset - DataPulse cleans it, profiles it, and surfaces insights.
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# STEP 1 — LOAD DATA
+# STEP 1 - LOAD DATA
 # ═════════════════════════════════════════════════════════════════════════════
 section_label(1, "Load Data")
 
@@ -524,7 +524,7 @@ with tab_sample:
     if st.button("Load Sample"):
             try:
                 df = pd.read_csv(SAMPLES[selected_sample])
-                src = selected_sample.split("—")[0].strip()
+                src = selected_sample.split("-")[0].strip()
                 st.session_state.update(raw_df=df, data_source=src)
                 reset_cleaning()
                 notice(f"Loaded <strong>{src}</strong> &nbsp;·&nbsp; "
@@ -534,7 +534,7 @@ with tab_sample:
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# STEP 2 — CLEAN DATA
+# STEP 2 - CLEAN DATA
 # ═════════════════════════════════════════════════════════════════════════════
 if st.session_state.raw_df is not None:
     raw_df = st.session_state.raw_df
@@ -661,7 +661,7 @@ if st.session_state.raw_df is not None:
             f"font-size:0.7rem;font-weight:600;'>{len(outlier_info)} column(s)</span></div>",
             unsafe_allow_html=True
         )
-        st.caption("IQR method — values outside Q1 - 1.5×IQR or Q3 + 1.5×IQR")
+        st.caption("IQR method - values outside Q1 - 1.5×IQR or Q3 + 1.5×IQR")
 
         n = len(outlier_info)
         ncols = min(n, 4)
@@ -774,7 +774,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
             unsafe_allow_html=True
         )
     else:
-        notice("Data was already clean — no changes were needed.", "success")
+        notice("Data was already clean - no changes were needed.", "success")
 
     st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
 
@@ -801,7 +801,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
     )
 
     # ═══════════════════════════════════════════════════════════════════════
-    # STEP 3 — PROFILE & EDA
+    # STEP 3 - PROFILE & EDA
     # ═══════════════════════════════════════════════════════════════════════
     section_label(3, "Profile & EDA")
 
@@ -1087,7 +1087,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
                 )
 
     # ═══════════════════════════════════════════════════════════════════════
-    # STEP 4 — ANALYSIS
+    # STEP 4 - ANALYSIS
     # ═══════════════════════════════════════════════════════════════════════
     section_label(4, "Analysis")
 
@@ -1233,7 +1233,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
             with r2:
                 feat_options = [c for c in numeric_cols if c != reg_target]
                 reg_features = st.multiselect(
-                    "Feature columns (X) — select one or more",
+                    "Feature columns (X) - select one or more",
                     feat_options, key="reg_features"
                 )
 
@@ -1284,7 +1284,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
                                 plot_feature_importance(reg_result['coef_df']),
                                 use_container_width=True
                             )
-                            st.caption("Standardised coefficients — larger absolute value = more influence on target")
+                            st.caption("Standardised coefficients - larger absolute value = more influence on target")
 
                         with col_ht:
                             st.markdown(
@@ -1323,7 +1323,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
                                 )
 
     # ═══════════════════════════════════════════════════════════════════════
-    # STEP 5 — DOMAIN INSIGHTS
+    # STEP 5 - DOMAIN INSIGHTS
     # ═══════════════════════════════════════════════════════════════════════
     section_label(5, "Domain Insights")
 
@@ -1348,14 +1348,14 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
 
         # KPI cards
         kpi_items = [
-            ("Total Spend",       f"${kpis.get('total_spend', 0):,.2f}"   if kpis.get('total_spend') else "—"),
-            ("Avg ROAS",          f"{kpis.get('avg_roas', 0):.2f}x"       if kpis.get('avg_roas') else "—"),
-            ("Avg CTR",           f"{kpis.get('avg_ctr', 0):.2f}%"        if kpis.get('avg_ctr') else "—"),
-            ("Avg CPC",           f"${kpis.get('avg_cpc', 0):.2f}"        if kpis.get('avg_cpc') else "—"),
-            ("Avg CPR",           f"${kpis.get('avg_cpr', 0):.2f}"        if kpis.get('avg_cpr') else "—"),
-            ("Avg Result Rate",   f"{kpis.get('avg_result_rate', 0):.1f}%" if kpis.get('avg_result_rate') else "—"),
+            ("Total Spend",       f"${kpis.get('total_spend', 0):,.2f}"   if kpis.get('total_spend') else "-"),
+            ("Avg ROAS",          f"{kpis.get('avg_roas', 0):.2f}x"       if kpis.get('avg_roas') else "-"),
+            ("Avg CTR",           f"{kpis.get('avg_ctr', 0):.2f}%"        if kpis.get('avg_ctr') else "-"),
+            ("Avg CPC",           f"${kpis.get('avg_cpc', 0):.2f}"        if kpis.get('avg_cpc') else "-"),
+            ("Avg CPR",           f"${kpis.get('avg_cpr', 0):.2f}"        if kpis.get('avg_cpr') else "-"),
+            ("Avg Result Rate",   f"{kpis.get('avg_result_rate', 0):.1f}%" if kpis.get('avg_result_rate') else "-"),
         ]
-        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "-"]
 
         if kpi_items:
             n = len(kpi_items)
@@ -1377,7 +1377,7 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
             "<div style='font-size:0.78rem;font-weight:700;color:#111827;"
             "margin-bottom:0.3rem;'>Winning Ad Selector</div>"
             "<div style='font-size:0.75rem;color:#6b7280;margin-bottom:0.8rem;'>"
-            "Adjust thresholds — only ads meeting ALL criteria are shown.</div>",
+            "Adjust thresholds - only ads meeting ALL criteria are shown.</div>",
             unsafe_allow_html=True
         )
 
@@ -1459,12 +1459,12 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
         kpis = si.kpi_summary()
 
         kpi_items = [
-            ("Total Revenue",    f"${kpis.get('total_revenue', 0):,.2f}"  if kpis.get('total_revenue') else "—"),
-            ("Avg Order Value",  f"${kpis.get('avg_order_value', 0):,.2f}" if kpis.get('avg_order_value') else "—"),
-            ("Total Units Sold", f"{kpis.get('total_units', 0):,}"         if kpis.get('total_units') else "—"),
-            ("Avg Discount",     f"{kpis.get('avg_discount_pct', 0):.1f}%" if kpis.get('avg_discount_pct') else "—"),
+            ("Total Revenue",    f"${kpis.get('total_revenue', 0):,.2f}"  if kpis.get('total_revenue') else "-"),
+            ("Avg Order Value",  f"${kpis.get('avg_order_value', 0):,.2f}" if kpis.get('avg_order_value') else "-"),
+            ("Total Units Sold", f"{kpis.get('total_units', 0):,}"         if kpis.get('total_units') else "-"),
+            ("Avg Discount",     f"{kpis.get('avg_discount_pct', 0):.1f}%" if kpis.get('avg_discount_pct') else "-"),
         ]
-        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "-"]
         if kpi_items:
             k_cols = st.columns(len(kpi_items), gap="small")
             for col_w, (lbl, val) in zip(k_cols, kpi_items):
@@ -1530,13 +1530,13 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
         kpis = fi.kpi_summary()
 
         kpi_items = [
-            ("Total Income",     f"${kpis.get('total_income', 0):,.0f}"   if kpis.get('total_income') else "—"),
-            ("Total Expense",    f"${kpis.get('total_expense', 0):,.0f}"  if kpis.get('total_expense') else "—"),
-            ("Net Profit",       f"${kpis.get('net_profit', 0):,.0f}"     if kpis.get('net_profit') is not None else "—"),
-            ("Profit Margin",    f"{kpis.get('profit_margin', 0):.1f}%"   if kpis.get('profit_margin') is not None else "—"),
-            ("Budget Variance",  f"${kpis.get('budget_variance', 0):,.0f}" if kpis.get('budget_variance') is not None else "—"),
+            ("Total Income",     f"${kpis.get('total_income', 0):,.0f}"   if kpis.get('total_income') else "-"),
+            ("Total Expense",    f"${kpis.get('total_expense', 0):,.0f}"  if kpis.get('total_expense') else "-"),
+            ("Net Profit",       f"${kpis.get('net_profit', 0):,.0f}"     if kpis.get('net_profit') is not None else "-"),
+            ("Profit Margin",    f"{kpis.get('profit_margin', 0):.1f}%"   if kpis.get('profit_margin') is not None else "-"),
+            ("Budget Variance",  f"${kpis.get('budget_variance', 0):,.0f}" if kpis.get('budget_variance') is not None else "-"),
         ]
-        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "-"]
         if kpi_items:
             k_cols = st.columns(len(kpi_items), gap="small")
             for col_w, (lbl, val) in zip(k_cols, kpi_items):
@@ -1569,12 +1569,12 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
 
         kpi_items = [
             ("Headcount",       f"{kpis.get('headcount', 0):,}"),
-            ("Attrition Rate",  f"{kpis.get('attrition_rate', 0):.1f}%"  if kpis.get('attrition_rate') is not None else "—"),
-            ("Attrition Count", f"{kpis.get('attrition_count', 0)}"      if kpis.get('attrition_count') is not None else "—"),
-            ("Avg Salary",      f"${kpis.get('avg_salary', 0):,.0f}"     if kpis.get('avg_salary') else "—"),
-            ("Avg Tenure",      f"{kpis.get('avg_tenure', 0):.1f} yrs"   if kpis.get('avg_tenure') else "—"),
+            ("Attrition Rate",  f"{kpis.get('attrition_rate', 0):.1f}%"  if kpis.get('attrition_rate') is not None else "-"),
+            ("Attrition Count", f"{kpis.get('attrition_count', 0)}"      if kpis.get('attrition_count') is not None else "-"),
+            ("Avg Salary",      f"${kpis.get('avg_salary', 0):,.0f}"     if kpis.get('avg_salary') else "-"),
+            ("Avg Tenure",      f"{kpis.get('avg_tenure', 0):.1f} yrs"   if kpis.get('avg_tenure') else "-"),
         ]
-        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "-"]
         if kpi_items:
             k_cols = st.columns(len(kpi_items), gap="small")
             for col_w, (lbl, val) in zip(k_cols, kpi_items):
