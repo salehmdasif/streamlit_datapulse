@@ -93,33 +93,31 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     background-color: #30363d !important; border-color: #58a6ff !important;
 }
 
-/* Sidebar toggle button - show hamburger icon, hide icon font text */
-[data-testid="stSidebarCollapseButton"],
+/* Sidebar toggle buttons - both open and close */
+[data-testid="stSidebarCollapseButton"] { display: flex !important; }
 [data-testid="stSidebarCollapsedControl"] {
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+    position: fixed !important;
+    top: 0.6rem !important;
+    left: 0.6rem !important;
+    z-index: 9999 !important;
 }
 [data-testid="stSidebarCollapseButton"] button,
 [data-testid="stSidebarCollapsedControl"] button {
     background-color: #1f2937 !important;
     border: 1px solid #374151 !important;
-    color: #e5e7eb !important;
-    width: 2rem !important;
-    height: 2rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    width: 2.2rem !important; height: 2.2rem !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
 }
 [data-testid="stSidebarCollapseButton"] button span,
 [data-testid="stSidebarCollapsedControl"] button span {
-    font-size: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
+    font-size: 0 !important; overflow: hidden !important; width: 0 !important;
 }
 [data-testid="stSidebarCollapseButton"] button::after,
 [data-testid="stSidebarCollapsedControl"] button::after {
-    content: "☰";
+    content: "☰" !important;
     font-size: 1rem !important;
     color: #e5e7eb !important;
     font-family: sans-serif !important;
@@ -452,16 +450,6 @@ with st.sidebar:
                 st.session_state[k] = v
             st.rerun()
 
-    # Footer - pushed to bottom with margin-top auto
-    st.markdown(
-        "<div style='margin-top:auto;padding-top:2rem;'>"
-        "<hr style='border:none;border-top:1px solid #21262d;margin-bottom:0.6rem;'>"
-        "<div style='font-size:0.68rem;color:#484f58;padding:0.2rem 0;'>"
-        "Built by <a href='https://linkedin.com/in/salehmdasif' "
-        "style='color:#58a6ff;'>Mohammad Asif</a>"
-        " &nbsp;·&nbsp; Ravelweb Ltd</div></div>",
-        unsafe_allow_html=True
-    )
 
 
 # ═════════════════════════════════════════════════════════════════════════════
