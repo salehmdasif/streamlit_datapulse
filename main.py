@@ -25,6 +25,12 @@ from modules.analyzer import (
     trend_analysis,
     run_regression,
 )
+from modules.domain_insights import (
+    MarketingInsights,
+    SalesInsights,
+    FinanceInsights,
+    HRInsights,
+)
 
 # ── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -1328,3 +1334,299 @@ if st.session_state.cleaning_applied and st.session_state.cleaned_df is not None
                                     f"</div></div>",
                                     unsafe_allow_html=True
                                 )
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # STEP 5 — DOMAIN INSIGHTS
+    # ═══════════════════════════════════════════════════════════════════════
+    section_label(5, "Domain Insights")
+
+    domain = st.session_state.get("domain", "General")
+    dom_bg, dom_border, _ = DOMAIN_COLORS.get(domain, DOMAIN_COLORS["General"])
+
+    st.markdown(
+        f"<div style='display:inline-flex;align-items:center;gap:0.5rem;"
+        f"border:1px solid {dom_border};background:{dom_bg};"
+        f"padding:0.35rem 0.8rem;margin-bottom:1rem;'>"
+        f"<span style='font-size:0.7rem;font-weight:700;color:{dom_border};"
+        f"text-transform:uppercase;letter-spacing:0.06em;'>Detected Domain</span>"
+        f"<span style='font-size:0.82rem;font-weight:700;color:{dom_border};'>"
+        f"{domain}</span></div>",
+        unsafe_allow_html=True
+    )
+
+    # ── MARKETING / ADS ────────────────────────────────────────────────────
+    if "Marketing" in domain:
+        mi = MarketingInsights(cleaned_df)
+        kpis = mi.key_metrics_summary()
+
+        # KPI cards
+        kpi_items = [
+            ("Total Spend",       f"${kpis.get('total_spend', 0):,.2f}"   if kpis.get('total_spend') else "—"),
+            ("Avg ROAS",          f"{kpis.get('avg_roas', 0):.2f}x"       if kpis.get('avg_roas') else "—"),
+            ("Avg CTR",           f"{kpis.get('avg_ctr', 0):.2f}%"        if kpis.get('avg_ctr') else "—"),
+            ("Avg CPC",           f"${kpis.get('avg_cpc', 0):.2f}"        if kpis.get('avg_cpc') else "—"),
+            ("Avg CPR",           f"${kpis.get('avg_cpr', 0):.2f}"        if kpis.get('avg_cpr') else "—"),
+            ("Avg Result Rate",   f"{kpis.get('avg_result_rate', 0):.1f}%" if kpis.get('avg_result_rate') else "—"),
+        ]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+
+        if kpi_items:
+            n = len(kpi_items)
+            kpi_cols = st.columns(min(n, 6), gap="small")
+            for col_w, (lbl, val) in zip(kpi_cols, kpi_items):
+                col_w.markdown(
+                    f"<div style='border:1px solid #e5e7eb;padding:0.9rem 1rem;background:#fafafa;'>"
+                    f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+                    f"letter-spacing:0.06em;text-transform:uppercase;'>{lbl}</div>"
+                    f"<div style='font-size:1.2rem;font-weight:800;color:#111827;"
+                    f"margin-top:0.2rem;'>{val}</div></div>",
+                    unsafe_allow_html=True
+                )
+
+        st.markdown("<div style='height:1.2rem'></div>", unsafe_allow_html=True)
+
+        # Winning Ads selector with sliders
+        st.markdown(
+            "<div style='font-size:0.78rem;font-weight:700;color:#111827;"
+            "margin-bottom:0.3rem;'>Winning Ad Selector</div>"
+            "<div style='font-size:0.75rem;color:#6b7280;margin-bottom:0.8rem;'>"
+            "Adjust thresholds — only ads meeting ALL criteria are shown.</div>",
+            unsafe_allow_html=True
+        )
+
+        col_s1, col_s2, col_s3 = st.columns(3, gap="large")
+        with col_s1:
+            min_spend  = st.slider("Min Spend ($)",        0,   1000, 100,  50,  key="w_spend")
+            min_roas   = st.slider("Min ROAS",             0.0,  8.0, 2.0, 0.5, key="w_roas")
+            min_ctr    = st.slider("Min CTR (%)",          0.0,  5.0, 2.0, 0.5, key="w_ctr")
+        with col_s2:
+            min_res    = st.slider("Min Result Rate (%)",  0,    50,  20,   5,   key="w_res")
+            min_scroll = st.slider("Min Scroll Stop (%)",  0,    60,  25,   5,   key="w_scroll")
+            min_hook   = st.slider("Min Hook Rate (%)",    0,    60,  30,   5,   key="w_hook")
+        with col_s3:
+            min_hold   = st.slider("Min Hold Rate (%)",    0,    30,  10,   2,   key="w_hold")
+            max_cpr    = st.slider("Max CPR ($)",          1,   100,  20,   5,   key="w_cpr")
+            max_cpc    = st.slider("Max CPC ($)",          0.1,  5.0, 1.5, 0.1, key="w_cpc")
+
+        thresholds = {
+            "min_spend": min_spend, "min_roas": min_roas,
+            "min_result_rate": min_res, "min_scroll_stop": min_scroll,
+            "min_hook_rate": min_hook, "min_hold_rate": min_hold,
+            "max_cpr": max_cpr, "min_ctr": min_ctr, "max_cpc": max_cpc,
+        }
+
+        winners = mi.get_winning_ads(thresholds=thresholds, top_n=10)
+
+        if winners.empty:
+            notice("No ads meet the current criteria. Try relaxing the thresholds.", "warning")
+        else:
+            st.markdown(
+                f"<div style='display:inline-flex;align-items:center;gap:0.5rem;"
+                f"background:#f0fdf4;border:1px solid #16a34a;"
+                f"padding:0.3rem 0.8rem;margin-bottom:0.6rem;'>"
+                f"<span style='font-size:0.78rem;font-weight:700;color:#16a34a;'>"
+                f"{len(winners)} winning ad(s) found</span></div>",
+                unsafe_allow_html=True
+            )
+            st.dataframe(winners, use_container_width=True, hide_index=True)
+
+        # Top / Bottom for a selected metric
+        avail = mi.available_metrics()
+        num_avail = [m for m in avail if m not in ("ad_name", "adset_name", "campaign")]
+        if num_avail:
+            st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+            st.markdown(
+                "<div style='font-size:0.78rem;font-weight:700;color:#111827;"
+                "margin-bottom:0.4rem;'>Top 5 vs Bottom 5 Ads</div>",
+                unsafe_allow_html=True
+            )
+            sel_metric = st.selectbox(
+                "Metric", num_avail,
+                format_func=lambda x: x.replace("_", " ").title(),
+                key="tb_metric"
+            )
+            col_map = mi._col_map
+            if col_map.get(sel_metric):
+                top5, bot5 = mi.top_bottom(col_map[sel_metric], top_n=5)
+                tb_l, tb_r = st.columns(2, gap="large")
+                with tb_l:
+                    st.markdown(
+                        "<div style='font-size:0.7rem;font-weight:700;color:#16a34a;"
+                        "text-transform:uppercase;letter-spacing:0.06em;"
+                        "margin-bottom:0.3rem;'>Top 5</div>",
+                        unsafe_allow_html=True
+                    )
+                    st.dataframe(top5, use_container_width=True, hide_index=True)
+                with tb_r:
+                    st.markdown(
+                        "<div style='font-size:0.7rem;font-weight:700;color:#dc2626;"
+                        "text-transform:uppercase;letter-spacing:0.06em;"
+                        "margin-bottom:0.3rem;'>Bottom 5</div>",
+                        unsafe_allow_html=True
+                    )
+                    st.dataframe(bot5, use_container_width=True, hide_index=True)
+
+    # ── SALES ──────────────────────────────────────────────────────────────
+    elif "Sales" in domain:
+        si   = SalesInsights(cleaned_df)
+        kpis = si.kpi_summary()
+
+        kpi_items = [
+            ("Total Revenue",    f"${kpis.get('total_revenue', 0):,.2f}"  if kpis.get('total_revenue') else "—"),
+            ("Avg Order Value",  f"${kpis.get('avg_order_value', 0):,.2f}" if kpis.get('avg_order_value') else "—"),
+            ("Total Units Sold", f"{kpis.get('total_units', 0):,}"         if kpis.get('total_units') else "—"),
+            ("Avg Discount",     f"{kpis.get('avg_discount_pct', 0):.1f}%" if kpis.get('avg_discount_pct') else "—"),
+        ]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        if kpi_items:
+            k_cols = st.columns(len(kpi_items), gap="small")
+            for col_w, (lbl, val) in zip(k_cols, kpi_items):
+                col_w.markdown(
+                    f"<div style='border:1px solid #e5e7eb;padding:0.9rem 1rem;background:#fafafa;'>"
+                    f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+                    f"letter-spacing:0.06em;text-transform:uppercase;'>{lbl}</div>"
+                    f"<div style='font-size:1.2rem;font-weight:800;color:#111827;"
+                    f"margin-top:0.2rem;'>{val}</div></div>",
+                    unsafe_allow_html=True
+                )
+
+        st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+        sl, sr = st.columns(2, gap="large")
+        with sl:
+            top_prods = si.top_products()
+            if top_prods is not None:
+                st.markdown(
+                    "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                    "text-transform:uppercase;letter-spacing:0.06em;"
+                    "margin-bottom:0.4rem;'>Top 10 Products by Revenue</div>",
+                    unsafe_allow_html=True
+                )
+                st.plotly_chart(
+                    plot_categorical_bar(
+                        top_prods.rename(columns={"Product": "_p", "Revenue": "_r"}),
+                        "_p"
+                    ) if False else
+                    __import__("plotly.graph_objects", fromlist=["Figure"]).Figure(
+                        __import__("plotly.graph_objects", fromlist=["Bar"]).Bar(
+                            x=top_prods["Revenue"], y=top_prods["Product"],
+                            orientation="h",
+                            marker=dict(color="#111827"),
+                            text=top_prods["Revenue"].apply(lambda v: f"${v:,.0f}"),
+                            textposition="outside",
+                            textfont=dict(size=9, color="#6b7280"),
+                        )
+                    ).update_layout(
+                        font=dict(family="Inter, sans-serif", size=11),
+                        plot_bgcolor="white", paper_bgcolor="white",
+                        showlegend=False, margin=dict(l=10, r=40, t=10, b=10),
+                        height=max(200, len(top_prods)*32),
+                        xaxis=dict(showgrid=True, gridcolor="#f3f4f6"),
+                        yaxis=dict(autorange="reversed"),
+                        bargap=0.3,
+                    ),
+                    use_container_width=True
+                )
+        with sr:
+            rev_cat = si.revenue_by_category()
+            if rev_cat is not None:
+                st.markdown(
+                    "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                    "text-transform:uppercase;letter-spacing:0.06em;"
+                    "margin-bottom:0.4rem;'>Revenue by Category</div>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(rev_cat, use_container_width=True, hide_index=True)
+
+    # ── FINANCE ────────────────────────────────────────────────────────────
+    elif "Finance" in domain:
+        fi   = FinanceInsights(cleaned_df)
+        kpis = fi.kpi_summary()
+
+        kpi_items = [
+            ("Total Income",     f"${kpis.get('total_income', 0):,.0f}"   if kpis.get('total_income') else "—"),
+            ("Total Expense",    f"${kpis.get('total_expense', 0):,.0f}"  if kpis.get('total_expense') else "—"),
+            ("Net Profit",       f"${kpis.get('net_profit', 0):,.0f}"     if kpis.get('net_profit') is not None else "—"),
+            ("Profit Margin",    f"{kpis.get('profit_margin', 0):.1f}%"   if kpis.get('profit_margin') is not None else "—"),
+            ("Budget Variance",  f"${kpis.get('budget_variance', 0):,.0f}" if kpis.get('budget_variance') is not None else "—"),
+        ]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        if kpi_items:
+            k_cols = st.columns(len(kpi_items), gap="small")
+            for col_w, (lbl, val) in zip(k_cols, kpi_items):
+                profit_ok = "net_profit" in lbl.lower() or "margin" in lbl.lower()
+                val_color = "#16a34a" if (profit_ok and not val.startswith("-")) else "#111827"
+                col_w.markdown(
+                    f"<div style='border:1px solid #e5e7eb;padding:0.9rem 1rem;background:#fafafa;'>"
+                    f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+                    f"letter-spacing:0.06em;text-transform:uppercase;'>{lbl}</div>"
+                    f"<div style='font-size:1.2rem;font-weight:800;color:{val_color};"
+                    f"margin-top:0.2rem;'>{val}</div></div>",
+                    unsafe_allow_html=True
+                )
+
+        bva = fi.budget_vs_actual()
+        if bva is not None:
+            st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+            st.markdown(
+                "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                "text-transform:uppercase;letter-spacing:0.06em;"
+                "margin-bottom:0.4rem;'>Budget vs Actual</div>",
+                unsafe_allow_html=True
+            )
+            st.dataframe(bva, use_container_width=True, hide_index=True)
+
+    # ── HR ─────────────────────────────────────────────────────────────────
+    elif "HR" in domain:
+        hr   = HRInsights(cleaned_df)
+        kpis = hr.kpi_summary()
+
+        kpi_items = [
+            ("Headcount",       f"{kpis.get('headcount', 0):,}"),
+            ("Attrition Rate",  f"{kpis.get('attrition_rate', 0):.1f}%"  if kpis.get('attrition_rate') is not None else "—"),
+            ("Attrition Count", f"{kpis.get('attrition_count', 0)}"      if kpis.get('attrition_count') is not None else "—"),
+            ("Avg Salary",      f"${kpis.get('avg_salary', 0):,.0f}"     if kpis.get('avg_salary') else "—"),
+            ("Avg Tenure",      f"{kpis.get('avg_tenure', 0):.1f} yrs"   if kpis.get('avg_tenure') else "—"),
+        ]
+        kpi_items = [(l, v) for l, v in kpi_items if v != "—"]
+        if kpi_items:
+            k_cols = st.columns(len(kpi_items), gap="small")
+            for col_w, (lbl, val) in zip(k_cols, kpi_items):
+                col_w.markdown(
+                    f"<div style='border:1px solid #e5e7eb;padding:0.9rem 1rem;background:#fafafa;'>"
+                    f"<div style='font-size:0.65rem;font-weight:700;color:#9ca3af;"
+                    f"letter-spacing:0.06em;text-transform:uppercase;'>{lbl}</div>"
+                    f"<div style='font-size:1.2rem;font-weight:800;color:#111827;"
+                    f"margin-top:0.2rem;'>{val}</div></div>",
+                    unsafe_allow_html=True
+                )
+
+        st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+        hr_l, hr_r = st.columns(2, gap="large")
+        with hr_l:
+            attr_dept = hr.attrition_by_department()
+            if attr_dept is not None:
+                st.markdown(
+                    "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                    "text-transform:uppercase;letter-spacing:0.06em;"
+                    "margin-bottom:0.4rem;'>Attrition by Department</div>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(attr_dept, use_container_width=True, hide_index=True)
+        with hr_r:
+            sal_dept = hr.salary_by_department()
+            if sal_dept is not None:
+                st.markdown(
+                    "<div style='font-size:0.72rem;font-weight:700;color:#6b7280;"
+                    "text-transform:uppercase;letter-spacing:0.06em;"
+                    "margin-bottom:0.4rem;'>Salary by Department</div>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(sal_dept, use_container_width=True, hide_index=True)
+
+    # ── GENERAL (unknown domain) ────────────────────────────────────────────
+    else:
+        notice(
+            "No specific domain detected. Use the Analysis tab above for "
+            "correlation, group comparison, regression, and hypothesis testing.",
+            "info"
+        )
