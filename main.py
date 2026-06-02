@@ -62,54 +62,32 @@ html, body, [class*="css"], * {
 }
 
 /* ─ Sidebar ──────────────────────────────────────── */
-section[data-testid="stSidebar"] {
+[data-testid="stSidebar"],
+section[data-testid="stSidebar"],
+section[data-testid="stSidebar"] > div,
+div[data-testid="stSidebarContent"] {
     background-color: #0d1117 !important;
+}
+section[data-testid="stSidebar"] {
     border-right: 1px solid #21262d !important;
     padding-top: 0 !important;
-    display: block !important;
-    visibility: visible !important;
-    min-width: 240px !important;
 }
-section[data-testid="stSidebar"] > div:first-child {
-    padding-top: 0 !important;
-}
-/* Sidebar toggle button - keep visible */
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"] {
-    background-color: #1f2937 !important;
-    color: #e5e7eb !important;
-}
+section[data-testid="stSidebar"] > div:first-child { padding-top: 0 !important; }
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] small {
-    color: #8b949e !important;
-}
+section[data-testid="stSidebar"] small { color: #8b949e !important; }
 section[data-testid="stSidebar"] strong,
-section[data-testid="stSidebar"] b {
-    color: #e6edf3 !important;
-}
-section[data-testid="stSidebar"] a {
-    color: #58a6ff !important;
-    text-decoration: none !important;
-}
-section[data-testid="stSidebar"] hr {
-    border: none !important;
-    border-top: 1px solid #21262d !important;
-    margin: 0.6rem 0 !important;
-}
-/* Sidebar buttons */
+section[data-testid="stSidebar"] b    { color: #e6edf3 !important; }
+section[data-testid="stSidebar"] a    { color: #58a6ff !important; text-decoration: none !important; }
+section[data-testid="stSidebar"] hr   { border: none !important; border-top: 1px solid #21262d !important; margin: 0.6rem 0 !important; }
 section[data-testid="stSidebar"] .stButton > button {
-    background-color: #21262d !important;
-    color: #e6edf3 !important;
-    border: 1px solid #30363d !important;
-    width: 100% !important;
-    font-size: 0.78rem !important;
-    padding: 0.4rem 0.8rem !important;
+    background-color: #21262d !important; color: #e6edf3 !important;
+    border: 1px solid #30363d !important; width: 100% !important;
+    font-size: 0.78rem !important; padding: 0.4rem 0.8rem !important;
 }
 section[data-testid="stSidebar"] .stButton > button:hover {
-    background-color: #30363d !important;
-    border-color: #58a6ff !important;
+    background-color: #30363d !important; border-color: #58a6ff !important;
 }
 
 /* ─ Main Buttons ─────────────────────────────────── */
@@ -169,9 +147,12 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     color: #6b7280 !important;
     font-size: 0.85rem !important;
 }
-/* Hide hidden label space */
-.stFileUploader [data-testid="InputInstructions"],
-.stFileUploader > label { margin: 0 !important; height: 0 !important; }
+/* Hide file uploader label entirely */
+.stFileUploader > label,
+[data-testid="stFileUploader"] > label,
+[data-testid="stFileUploader"] [data-testid="InputInstructions"] {
+    display: none !important;
+}
 
 /* ─ Text Input ───────────────────────────────────── */
 .stTextInput input {
@@ -472,9 +453,9 @@ tab_upload, tab_url, tab_sample = st.tabs(["  Upload File  ", "  Paste URL  ", "
 with tab_upload:
     st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
-        "file",
+        "x",
         type=["csv", "xls", "xlsx"],
-        label_visibility="hidden"
+        label_visibility="collapsed"
     )
     if uploaded_file is not None:
         try:
@@ -561,7 +542,7 @@ if st.session_state.raw_df is not None:
     section_label(2, "Clean Data")
 
     # Raw preview
-    with st.expander("Raw Data Preview"):
+    with st.expander("Preview before cleaning"):
         st.dataframe(raw_df.head(10), use_container_width=True)
         st.caption(
             f"Memory usage: {raw_df.memory_usage(deep=True).sum() / 1024:.1f} KB  "
