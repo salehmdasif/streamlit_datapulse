@@ -6,7 +6,7 @@ DataPulse is an interactive data analytics web application built with Python and
 
 ---
 
-**Live Demo:** [Open in Streamlit](https://dpulse.streamlit.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Now-0969da?style=for-the-badge&logo=google-chrome&logoColor=white)](https://dpulse.streamlit.app/)
 
 ---
 
