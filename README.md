@@ -6,7 +6,7 @@ DataPulse is an interactive data analytics web application built with Python and
 
 ---
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Now-0969da?style=for-the-badge&logo=google-chrome&logoColor=white)](https://dpulse.streamlit.app/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Now-0969da?style=for-the-badge&logo=google-chrome&logoColor=white)](https://dpulse.streamlit.app)
 
 ---
 
@@ -282,17 +282,17 @@ See [Domain Intelligence](#domain-intelligence) section below.
 
 **9 Chart Types:**
 
-| Chart | Best For |
-|---|---|
-| **Pie / Donut** | Category share breakdown |
-| **Bar** | Category vs metric comparison, top N |
-| **Line** | Trend over time, multi-metric overlay |
-| **Bubble** | 3-variable relationship (X, Y, size) |
-| **Funnel** | Conversion pipeline, stage drop-off |
-| **Waterfall** | Contribution breakdown, budget bridge |
-| **Treemap** | Hierarchical category breakdown |
-| **Stacked Bar** | Sub-group composition, regular or 100% normalized |
-| **Gauge / KPI Meter** | Single metric vs range, up to 4 simultaneous |
+| Chart                 | Best For                                          |
+| --------------------- | ------------------------------------------------- |
+| **Pie / Donut**       | Category share breakdown                          |
+| **Bar**               | Category vs metric comparison, top N              |
+| **Line**              | Trend over time, multi-metric overlay             |
+| **Bubble**            | 3-variable relationship (X, Y, size)              |
+| **Funnel**            | Conversion pipeline, stage drop-off               |
+| **Waterfall**         | Contribution breakdown, budget bridge             |
+| **Treemap**           | Hierarchical category breakdown                   |
+| **Stacked Bar**       | Sub-group composition, regular or 100% normalized |
+| **Gauge / KPI Meter** | Single metric vs range, up to 4 simultaneous      |
 
 **Per-chart controls:** Column selectors, aggregation (sum/mean/median/count), top N, sort order, drill-down, normalized mode, multi-metric selection.
 
@@ -478,19 +478,19 @@ streamlit-datapulse/
 
 ## Project Metrics
 
-| Metric                      | Value                                                                        |
-| --------------------------- | ---------------------------------------------------------------------------- |
-| Total Python modules        | 7                                                                            |
-| Lines of code (approx)      | ~2,800                                                                       |
-| Analysis methods            | 5 (correlation, group, trend, regression, hypothesis testing)                |
-| Domain intelligence classes | 4 (Marketing, Sales, Finance, HR)                                            |
-| Data quality checks         | 6 types                                                                      |
-| Bundled sample datasets     | 4 (80–90 rows each)                                                          |
-| Supported file formats      | CSV, XLS, XLSX, URL                                                          |
+| Metric                      | Value                                                                                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Total Python modules        | 7                                                                                                                                            |
+| Lines of code (approx)      | ~2,800                                                                                                                                       |
+| Analysis methods            | 5 (correlation, group, trend, regression, hypothesis testing)                                                                                |
+| Domain intelligence classes | 4 (Marketing, Sales, Finance, HR)                                                                                                            |
+| Data quality checks         | 6 types                                                                                                                                      |
+| Bundled sample datasets     | 4 (80–90 rows each)                                                                                                                          |
+| Supported file formats      | CSV, XLS, XLSX, URL                                                                                                                          |
 | Plotly chart types          | 16 (heatmap, histogram, box, bar, scatter, line, feature importance, pie, bubble, funnel, waterfall, treemap, stacked bar, gauge + variants) |
-| PNG chart export            | Yes — all 9 Analytics Charts, 2× resolution via kaleido                      |
-| Build phases completed      | 6 / 6                                                                        |
-| Estimated complexity        | High                                                                         |
+| PNG chart export            | Yes — all 9 Analytics Charts, 2× resolution via kaleido                                                                                      |
+| Build phases completed      | 6 / 6                                                                                                                                        |
+| Estimated complexity        | High                                                                                                                                         |
 
 ---
 

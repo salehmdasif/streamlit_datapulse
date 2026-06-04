@@ -1,34 +1,188 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-
-# Environment
-.env
-.venv
-venv/
-
-# IDE
+# ========================
+# IDE & Editors
+# ========================
 .idea/
 .vscode/
-*.iml
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*.swo
+*~
 
+# ========================
 # Claude Code
+# ========================
 .claude/
 
-# OS
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+wheels/
+*.whl
+MANIFEST
+
+# Virtual Environments (never use, but just in case)
+.venv/
+venv/
+env/
+ENV/
+.env/
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+*.env
+secrets.json
+secrets.yaml
+secrets.toml
+config.local.*
+credentials.json
+service_account.json
+*_credentials.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ========================
+# Logs & Databases
+# ========================
+*.log
+logs/
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# ========================
+# OS Files
+# ========================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Streamlit
-.streamlit/secrets.toml
+# ========================
+# Node.js
+# ========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm
+.yarn/cache
+.yarn/unplugged
+.pnp.*
+package-lock.json
 
-# Old project folder
-streamlit_fb_ad_data_dashboard/
+# ========================
+# Frontend Build Output
+# ========================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.vite/
+*.local
 
-# Internal planning docs
-PLAN.md
-gen_samples.py
-=0.2.1
+# ========================
+# Docker
+# ========================
+docker-compose.override.yml
+.dockerenv
+
+# ========================
+# Testing & Coverage
+# ========================
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+.tox/
+.nox/
+*.cover
+*.coverage.*
+nosetests.xml
+coverage.xml
+*.coveragerc
+
+# ========================
+# Jupyter Notebooks
+# ========================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ========================
+# Data Files (large/sensitive)
+# ========================
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.feather
+*.pkl
+*.pickle
+data/raw/
+data/processed/
+uploads/
+exports/
+
+# ========================
+# Compiled / Binary
+# ========================
+*.exe
+*.dll
+*.so
+*.dylib
+*.class
+*.o
+*.a
+
+# ========================
+# Misc
+# ========================
+tmp/
+temp/
+.temp/
+.tmp/
+cache/
+.cache/
+*.bak
+*.backup
+*.orig
+*.rej
